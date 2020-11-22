@@ -701,6 +701,10 @@ bool DeRestPluginPrivate::sendConfigureReportingRequest(BindingTask &bt, const s
     for (const ConfigureReportingRequest &rq : requests)
     {
         NodeValue &val = bt.restNode->getZclValue(bt.binding.clusterId, rq.attributeId, bt.binding.srcEndpoint);
+        
+        DBG_Printf(DBG_INFO, "Debug Axis: 0x%04X attr: 0x%04X of node 0x%016llX , values are %d %d \n",
+           bt.binding.clusterId, rq.attributeId, bt.restNode->address().ext(), rq.minInterval, rq.maxInterval, );
+        
         if (val.clusterId == bt.binding.clusterId)
         {
             // value exists
