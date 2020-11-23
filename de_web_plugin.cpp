@@ -6063,7 +6063,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         else if (sensorNode.fingerPrint().hasInCluster(DOOR_LOCK_CLUSTER_ID))
         {
             clusterId = DOOR_LOCK_CLUSTER_ID;
-            sensorNode.addItem(DataTypeInt16, RStateLockState);
+            sensorNode.addItem(DataTypeString, RStateLockState);
         }
         item = sensorNode.addItem(DataTypeBool, RStateOpen);
         item->setValue(false);
