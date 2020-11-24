@@ -3093,6 +3093,7 @@ LightNode *DeRestPluginPrivate::updateLightNode(const deCONZ::NodeEvent &event)
                                     item->setValue(on);
                                     enqueueEvent(Event(RSensors, RStateOn, sensorDL->id(), item));
                                 }
+                            }
                         }
                         else
                         {
