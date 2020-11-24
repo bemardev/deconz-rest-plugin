@@ -352,6 +352,7 @@
 #define VENDOR_C2DF                 0xC2DF
 #define VENDOR_PHILIO               0xFFA0
 #define VENDOR_ADUROLIGHT           0x122D
+#define VENDOR_YALE                 0xAAAA
 
 #define ANNOUNCE_INTERVAL 45 // minutes default announce interval
 

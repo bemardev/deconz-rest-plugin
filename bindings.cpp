@@ -2274,6 +2274,9 @@ void DeRestPluginPrivate::checkLightBindingsForAttributeReporting(LightNode *lig
         else if (lightNode->manufacturerCode() == VENDOR_AXIS || lightNode->manufacturerCode() == VENDOR_MMB) // Axis shade
         {
         }
+        else if (lightNode->manufacturer() == VENDOR_YALE)
+        {
+        }
         else if (lightNode->manufacturer() == QLatin1String("Sunricher"))
         {
         }
@@ -2687,6 +2690,8 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
         sensor->modelId() == QLatin1String("ms01") ||
         sensor->modelId() == QLatin1String("TH01") ||
         sensor->modelId() == QLatin1String("DS01") ||
+        // Yale
+        sensor->modelId() == QLatin1String("YRD226 TSDB") ||
         // Danfoss
         sensor->modelId() == QLatin1String("eTRV0100")
         )

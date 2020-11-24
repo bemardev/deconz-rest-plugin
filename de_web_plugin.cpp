@@ -415,6 +415,7 @@ static const SupportedDevice supportedDevices[] = {
     { VENDOR_NONE, "DS01", tiMacPrefix }, // Sonoff SNZB-04
     { VENDOR_DANFOSS, "eTRV0100", silabs2MacPrefix }, // Danfoss Ally thermostat
     { VENDOR_LDS, "ZBT-CCTSwitch-D0001", silabs2MacPrefix }, // Leedarson remote control
+    { VENDOR_YALE, "YRD226 TSDB", emberMacPrefix }, // Yale YRD226 ZigBee keypad door lock
     { VENDOR_KWIKSET, "SMARTCODE_CONVERT_GEN1", zenMacPrefix }, // Kwikset 914 ZigBee smart lock
 
     { 0, nullptr, 0 }
@@ -1810,6 +1811,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
         node->nodeDescriptor().manufacturerCode() == VENDOR_THIRD_REALITY || // Third Reality smart light switch
         node->nodeDescriptor().manufacturerCode() == VENDOR_AXIS || // Axis shade
         node->nodeDescriptor().manufacturerCode() == VENDOR_MMB || // Axis shade
+        node->nodeDescriptor().manufacturerCode() == VENDOR_YALE || // Yale doorlock
         // Danalock support. The vendor ID (0x115c) needs to defined and whitelisted, as it's battery operated
         node->nodeDescriptor().manufacturerCode() == VENDOR_DANALOCK || // Danalock Door Lock
         node->nodeDescriptor().manufacturerCode() == VENDOR_KWIKSET || // Kwikset 914 ZigBee smart lock
@@ -1909,6 +1911,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             // Danalock support. The cluster needs to be defined and whitelisted by setting hasServerOnOff
             else if (node->nodeDescriptor().manufacturerCode() == VENDOR_DANALOCK && i->inClusters()[c].id() == DOOR_LOCK_CLUSTER_ID) { hasServerOnOff = true; }
             else if (node->nodeDescriptor().manufacturerCode() == VENDOR_KWIKSET && i->inClusters()[c].id() == DOOR_LOCK_CLUSTER_ID) { hasServerOnOff = true; } //Kwikset 914 ZigBee smart lock
+            else if (node->nodeDescriptor().manufacturerCode() == VENDOR_YALE && i->inClusters()[c].id() == DOOR_LOCK_CLUSTER_ID) { hasServerOnOff = true; } // Yale doolock
             else if (i->inClusters()[c].id() == BASIC_CLUSTER_ID)
             {
                 std::vector<deCONZ::ZclAttribute>::const_iterator j = i->inClusters()[c].attributes().begin();
