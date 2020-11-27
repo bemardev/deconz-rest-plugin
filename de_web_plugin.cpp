@@ -877,7 +877,7 @@ void DeRestPluginPrivate::apsdeDataIndication(const deCONZ::ApsDataIndication &i
             
         case DOOR_LOCK_CLUSTER_ID:
             DBG_Printf(DBG_INFO, "Door lock debug 0x%016llX, data 0x%08X \n", ind.srcAddress().ext(), zclFrame.commandId() );
-            break
+            break;
         
 
         default:
