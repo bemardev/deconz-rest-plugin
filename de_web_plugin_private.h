@@ -284,6 +284,7 @@
 #define VENDOR_VISONIC              0x1011
 #define VENDOR_ATMEL                0x1014
 #define VENDOR_DEVELCO              0x1015
+#define VENDOR_YALE                 0x101D
 #define VENDOR_MAXSTREAM            0x101E // Used by Digi
 #define VENDOR_VANTAGE              0x1021
 #define VENDOR_LEGRAND              0x1021 // wrong name?
@@ -352,7 +353,6 @@
 #define VENDOR_C2DF                 0xC2DF
 #define VENDOR_PHILIO               0xFFA0
 #define VENDOR_ADUROLIGHT           0x122D
-#define VENDOR_YALE                 0xAAAA
 
 #define ANNOUNCE_INTERVAL 45 // minutes default announce interval
 
