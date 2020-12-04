@@ -202,6 +202,7 @@ static const SupportedDevice supportedDevices[] = {
     { VENDOR_SAMJIN, "water", samjinMacPrefix }, // Smarthings (Samjin) Water Sensor
     { VENDOR_SAMJIN, "button", samjinMacPrefix }, // Smarthings (Samjin) Button
     { VENDOR_SAMJIN, "outlet", samjinMacPrefix }, // Smarthings (Samjin) Outlet
+    { VENDOR_JENNIC, "lumi.lock.v1", jennicMacPrefix }, // Xiaomi A6121 Vima Smart Lock
     { VENDOR_JENNIC, "lumi.sensor_ht", jennicMacPrefix },
     { VENDOR_JENNIC, "lumi.weather", jennicMacPrefix },
     { VENDOR_JENNIC, "lumi.sensor_magnet", jennicMacPrefix },
@@ -4729,6 +4730,11 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
                              (manufacturer == QLatin1String("_TZE200_aoclfnxz")) )
                     {
                         fpThermostatSensor.inClusters.push_back(TUYA_CLUSTER_ID);
+                    }
+                    else if ((node->nodeDescriptor().manufacturerCode() == VENDOR_JENNIC) &&
+                              modelId.startsWith(QLatin1String("lumi.lock.v1")))
+                    {
+                        fpOpenCloseSensor.inClusters.push_back(ONOFF_CLUSTER_ID);
                     }
                 }
                     break;
