@@ -148,6 +148,7 @@ static const SupportedDevice supportedDevices[] = {
     { VENDOR_C2DF, "3326-L", emberMacPrefix }, // Iris motion sensor v2
     { VENDOR_CENTRALITE, "3328-G", emberMacPrefix }, // Centralite micro motion sensor
     { VENDOR_CENTRALITE, "3323", emberMacPrefix }, // Centralite contact sensor
+    { VENDOR_DATEK, "ID Lock 150", silabs4MacPrefix }, // ID-Lock
     { VENDOR_DDEL, "de_spect", silabs3MacPrefix }, // dresden elektronic spectral sensor
     { VENDOR_JASCO, "45856", celMacPrefix },
     { VENDOR_NONE, "LM_",  tiMacPrefix },
@@ -1819,6 +1820,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
         // Danalock support. The vendor ID (0x115c) needs to defined and whitelisted, as it's battery operated
         node->nodeDescriptor().manufacturerCode() == VENDOR_DANALOCK || // Danalock Door Lock
         node->nodeDescriptor().manufacturerCode() == VENDOR_KWIKSET || // Kwikset 914 ZigBee smart lock
+        node->nodeDescriptor().manufacturerCode() == VENDOR_DATEK || // ID-Lock
         // Schlage support. The vendor ID (0x1236) needs to defined and whitelisted, as it's battery operated
         node->nodeDescriptor().manufacturerCode() == VENDOR_SCHLAGE)
     {
@@ -1914,6 +1916,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             else if ((i->inClusters()[c].id() == TUYA_CLUSTER_ID) && (node->macCapabilities() & deCONZ::MacDeviceIsFFD) ) { hasServerOnOff = true; }
             // Danalock support. The cluster needs to be defined and whitelisted by setting hasServerOnOff
             else if (node->nodeDescriptor().manufacturerCode() == VENDOR_DANALOCK && i->inClusters()[c].id() == DOOR_LOCK_CLUSTER_ID) { hasServerOnOff = true; }
+            else if (node->nodeDescriptor().manufacturerCode() == VENDOR_DATEK && i->inClusters()[c].id() == DOOR_LOCK_CLUSTER_ID) { hasServerOnOff = true; } // ID-Lock
             else if (node->nodeDescriptor().manufacturerCode() == VENDOR_KWIKSET && i->inClusters()[c].id() == DOOR_LOCK_CLUSTER_ID) { hasServerOnOff = true; } //Kwikset 914 ZigBee smart lock
             else if (i->inClusters()[c].id() == BASIC_CLUSTER_ID)
             {
@@ -5157,7 +5160,8 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
                         // fpSwitch.inClusters.push_back(DOOR_LOCK_CLUSTER_ID);
                         fpVibrationSensor.inClusters.push_back(DOOR_LOCK_CLUSTER_ID);
                     }
-                    if (modelId == QLatin1String("SMARTCODE_CONVERT_GEN1")) // Kwikset 914
+                    if ((modelId == QLatin1String("SMARTCODE_CONVERT_GEN1")) || // Kwikset 914
+                        (modelId == QLatin1String("ID Lock 150")) )
                     {
                         fpOpenCloseSensor.inClusters.push_back(DOOR_LOCK_CLUSTER_ID);
                     }

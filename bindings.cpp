@@ -2208,6 +2208,9 @@ void DeRestPluginPrivate::checkLightBindingsForAttributeReporting(LightNode *lig
         else if (lightNode->manufacturerCode() == VENDOR_STELPRO)
         {
         }
+        else if (lightNode->manufacturerCode() == VENDOR_DATEK)
+        {
+        }
         else if (lightNode->modelId().startsWith(QLatin1String("SP ")))
         {
         }
@@ -2470,6 +2473,8 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
         sensor->modelId().startsWith(QLatin1String("ROM00")) ||
         // Lutron Aurora Friends-of-Hue dimmer switch
         sensor->modelId().startsWith(QLatin1String("Z3-1BRL")) ||
+        //Datek
+        sensor->modelId().startsWith(QLatin1String("ID Lock 150")) ||
         // ubisys
         sensor->modelId().startsWith(QLatin1String("C4")) ||
         sensor->modelId().startsWith(QLatin1String("D1")) ||
