@@ -233,6 +233,7 @@ static const SupportedDevice supportedDevices[] = {
     { VENDOR_XIAOMI, "lumi.sen_ill.mgl01", xiaomiMacPrefix }, // Xiaomi ZB3.0 light sensor
     { VENDOR_XIAOMI, "lumi.plug", xiaomiMacPrefix }, // Xiaomi smart plugs (router)
     { VENDOR_XIAOMI, "lumi.switch.b1naus01", xiaomiMacPrefix }, // Xiaomi Aqara ZB3.0 Smart Wall Switch Single Rocker WS-USC03
+    { VENDOR_XIAOMI, "lumi.switch.n0agl1", xiaomiMacPrefix }, // Aqara Single Switch Module T1
     // { VENDOR_XIAOMI, "lumi.curtain", jennicMacPrefix}, // Xiaomi curtain controller (router) - exposed only as light
     { VENDOR_XIAOMI, "lumi.curtain.hagl04", xiaomiMacPrefix}, // Xiaomi B1 curtain controller
     { VENDOR_UBISYS, "C4", ubisysMacPrefix },
@@ -6255,6 +6256,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
                  (!modelId.startsWith(QLatin1String("ZB-ONOFFPlug-D0005"))) &&
                  (modelId != QLatin1String("Plug-230V-ZB3.0")) &&
                  (modelId != QLatin1String("lumi.switch.b1naus01")) &&
+                 (modelId != QLatin1String("lumi.switch.n0agl1")) &&
                  (node->nodeDescriptor().manufacturerCode() != VENDOR_LEGRAND) ) // OSRAM and Legrand plug don't have theses options
             {
                 item = sensorNode.addItem(DataTypeUInt16, RStateVoltage);
@@ -8756,6 +8758,7 @@ void DeRestPluginPrivate::updateSensorNode(const deCONZ::NodeEvent &event)
                                         i->modelId() == QLatin1String("RICI01") ||           // LifeControl Smart Plug
                                         i->modelId().startsWith(QLatin1String("outlet")) ||  // Samsung SmartThings IM6001-OTP/IM6001-OTP01
                                         i->modelId().startsWith(QLatin1String("3200-S")) ||    // Samsung/Centralite smart outlet
+                                        i->modelId().startsWith(QLatin1String("lumi.switch.n0agl1")) ||    // Aqara Single Switch Module T1
                                         i->modelId().startsWith(QLatin1String("lumi.switch.b1naus01"))) // Xiaomi ZB3.0 Smart Wall Switch
                                     {
                                         //power += 5; power /= 10; // 0.1W -> W
