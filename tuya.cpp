@@ -92,6 +92,73 @@ bool UseTuyaCluster(QString manufacturer)
     return false;
 }
 
+// fonction to detect supported device
+bool IsTuyaSupportedDevice(const quint16 ManuCode, const quint64 MacAdressPrefix, const QString &modelId)
+{
+    //Check Possible manufacture code
+    if ((ManuCode != VENDOR_NONE) && (ManuCode != VENDOR_NONE) && (ManuCode != VENDOR_NONE))
+    {
+        return false;
+    }
+    // Check possible MAC prefix
+    if ((MacAdressPrefix != silabs3MacPrefix) &&
+        (MacAdressPrefix != silabs4MacPrefix) &&
+        (MacAdressPrefix != silabs5MacPrefix) &&
+        (MacAdressPrefix != silabs7MacPrefix) &&
+        (MacAdressPrefix != silabs8MacPrefix) &&
+        (MacAdressPrefix != silabs9MacPrefix))
+    {
+        return false;
+    }
+    // Check some model Id
+    if ((modelId != QLatin1String("TS0204")) &&
+        (modelId != QLatin1String("TS0205")) &&
+        (modelId != QLatin1String("TS0121")) &&
+        (modelId != QLatin1String("TS0302")) &&
+        (modelId != QLatin1String("TS0041")) &&
+        (modelId != QLatin1String("TS0042")) &&
+        (modelId != QLatin1String("TS0043")) &&
+        (modelId != QLatin1String("TS0044")) &&
+        (modelId != QLatin1String("TS0601")) &&
+        (modelId != QLatin1String("TS0207")) &&
+        (modelId != QLatin1String("TS0202")) &&
+        (modelId != QLatin1String("0yu2xgi")) &&
+        (modelId != QLatin1String("eaxp72v")) &&
+        (modelId != QLatin1String("88teujp")) &&
+        (modelId != QLatin1String("fvq6avy")) &&
+        (modelId != QLatin1String("0yu2xgi")) &&
+        (modelId != QLatin1String("eaxp72v")) &&
+        (modelId != QLatin1String("fvq6avy")) &&
+        (modelId != QLatin1String("kud7u2l")) &&
+        (modelId != QLatin1String("GbxAXL2")) &&
+        (modelId != QLatin1String("TY0203")) &&
+        (modelId != QLatin1String("TY0202")))
+    {
+        return false;
+    }
+    
+    return true;
+}
+
+// Fonction to enable or binding
+// Only use model id for now
+bool IsTuyaNeedBinding(const QString ManuName, const QString &modelId)
+{
+    // Check some model Id
+    if ((modelId != QLatin1String("TY0203")) &&
+        (modelId != QLatin1String("TY0203")) &&
+        (modelId != QLatin1String("TS0202")) &&
+        (modelId != QLatin1String("TS0043")) &&
+        (modelId != QLatin1String("TS0041")) &&
+        (modelId != QLatin1String("TS0044")) &&
+        (modelId != QLatin1String("TS01")) &&
+        (modelId != QLatin1String("TS02")) &&
+        (modelId != QLatin1String("TS03")))
+    {
+        return false;
+    }
+    return true;
+}
 
 /*! Handle packets related to Tuya 0xEF00 cluster.
     \param ind the APS level data indication containing the ZCL packet

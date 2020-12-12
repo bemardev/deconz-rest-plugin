@@ -9271,6 +9271,12 @@ bool DeRestPluginPrivate::isDeviceSupported(const deCONZ::Node *node, const QStr
         }
         s++;
     }
+    
+    // Part only for tuya
+    if (!node->nodeDescriptor().isNull() && IsTuyaSupportedDevice(node->nodeDescriptor().manufacturerCode(), node->address().ext() & macPrefixMask , modelId ))
+    {
+        return true;
+    }
 
     return false;
 }

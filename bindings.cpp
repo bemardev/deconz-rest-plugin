@@ -2441,7 +2441,7 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
     bool deviceSupported = false;
     // whitelist
         // Climax
-    if (sensor->modelId().startsWith(QLatin1String("LM_")) ||
+    if ((sensor->modelId().startsWith(QLatin1String("LM_")) ||
         sensor->modelId().startsWith(QLatin1String("LMHT_")) ||
         sensor->modelId().startsWith(QLatin1String("IR_")) ||
         sensor->modelId().startsWith(QLatin1String("DC_")) ||
@@ -2696,7 +2696,8 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
         sensor->modelId() == QLatin1String("TH01") ||
         sensor->modelId() == QLatin1String("DS01") ||
         // Danfoss
-        sensor->modelId() == QLatin1String("eTRV0100")
+        sensor->modelId() == QLatin1String("eTRV0100") ) ||
+        IsTuyaNeedBinding( sensor->manufacturer(), sensor->modelId() )
         )
     {
         deviceSupported = true;

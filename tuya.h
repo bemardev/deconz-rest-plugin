@@ -28,5 +28,7 @@
 #define DP_TYPE_FAULT 0x05
 
 bool UseTuyaCluster(QString manufacturer);
+bool IsTuyaSupportedDevice(const quint16 ManuCode, const quint64 MacAdressPrefix, const QString &modelId);
+bool IsTuyaNeedBinding(const QString ManuName, const QString &modelId);
 
 #endif // TUYA_H
