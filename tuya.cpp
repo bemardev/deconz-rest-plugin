@@ -96,7 +96,7 @@ bool UseTuyaCluster(QString manufacturer)
 bool IsTuyaSupportedDevice(const quint16 ManuCode, const quint64 MacAdressPrefix, const QString &modelId)
 {
     //Check Possible manufacture code
-    if ((ManuCode != VENDOR_NONE) && (ManuCode != VENDOR_NONE) && (ManuCode != VENDOR_NONE))
+    if ((ManuCode != VENDOR_NONE) && (ManuCode != VENDOR_EMBER) && (ManuCode != VENDOR_HEIMAN))
     {
         return false;
     }
@@ -110,7 +110,7 @@ bool IsTuyaSupportedDevice(const quint16 ManuCode, const quint64 MacAdressPrefix
     {
         return false;
     }
-    // Check some model Id
+    // Check some model Id, but not reliable
     if ((modelId != QLatin1String("TS0204")) &&
         (modelId != QLatin1String("TS0205")) &&
         (modelId != QLatin1String("TS0121")) &&
