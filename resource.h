@@ -108,6 +108,7 @@ extern const char *RStateSunrise;
 extern const char *RStateSunset;
 extern const char *RStateTampered;
 extern const char *RStateTemperature;
+extern const char *RStateTest;
 extern const char *RStateTilt;
 extern const char *RStateTiltAngle;
 extern const char *RStateUtc;
@@ -209,6 +210,7 @@ extern const QStringList RConfigLastChangeSourceValues;
 #define R_PENDING_USERTEST          (1 << 3)
 #define R_PENDING_WRITE_CIE_ADDRESS (1 << 4)
 #define R_PENDING_ENROLL_RESPONSE   (1 << 5)
+#define R_PENDING_MODE              (1 << 6)
 #define R_PENDING_WRITE_POLL_CHECKIN_INTERVAL  (1 << 6)
 #define R_PENDING_SET_LONG_POLL_INTERVAL       (1 << 7)
 

@@ -94,6 +94,7 @@ const char *RStateSunset = "state/sunset";
 const char *RStateUtc = "state/utc";
 const char *RStateTampered = "state/tampered";
 const char *RStateTemperature = "state/temperature";
+const char *RStateTest = "state/test";
 const char *RStateTilt = "state/tilt";
 const char *RStateTiltAngle = "state/tiltangle";
 const char *RStateValve = "state/valve";
@@ -221,7 +222,7 @@ void initResourceDescriptors()
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeUInt16, RStateCt));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeBool, RStateDark));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeBool, RStateDaylight));
-    rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeUInt8, RStateEffect));
+    rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeString, RStateEffect));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeString, RStateErrorCode));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeUInt16, RStateEventDuration));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeBool, RStateFire));
@@ -260,6 +261,7 @@ void initResourceDescriptors()
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeTime, RStateSunset));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeBool, RStateTampered));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeInt16, RStateTemperature, -27315, 32767));
+    rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeBool, RStateTest));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeUInt8, RStateTilt, 0, 100));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeUInt16, RStateTiltAngle));
     rItemDescriptors.emplace_back(ResourceItemDescriptor(DataTypeTime, RStateUtc));
@@ -531,10 +533,6 @@ const QString &ResourceItem::toString() const
             *m_str = dt.toString(format);
             return *m_str;
         }
-    }
-    else if (m_rid->suffix == RStateEffect)
-    {
-        return RStateEffectValuesMueller[m_num];
     }
 
     return rInvalidString;
