@@ -427,6 +427,19 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     }
                 }
                 break;
+                case 0x010A : // Frost detection
+                {
+                    bool frost = (data == 0) ? false : true;
+                    //ResourceItem *item = sensorNode->item(RConfigLocked);
+
+                    //if (item && item->toBool() != frost)
+                    //{
+                    //    item->setValue(frost);
+                    //    Event e(RSensors, RConfigLocked, sensorNode->id(), item);
+                    //    enqueueEvent(e);
+                    //}
+                }
+                break;
                 case 0x0112 : // Window open status
                 {
                     bool winopen = (data == 0) ? false : true;
@@ -542,6 +555,21 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     }
                 }
                 break;
+                case 0x0174: // Auto Lock, Auto / Manu
+                {
+                    bool AutoLock = false;
+                    if (data == 1) { AutoLock = true; }
+
+                    //ResourceItem *item = sensorNode->item(RStateLowBattery);
+
+                    //if (item && item->toBool() != AutoLock)
+                    //{
+                    //    item->setValue(AutoLock);
+                    //    Event e(RSensors, RStateLowBattery, sensorNode->id(), item);
+                    //    enqueueEvent(e);
+                    //}
+                }
+                break;
                 case 0x0202: // Thermostat heatsetpoint
                 {
                     qint16 temp = (static_cast<qint16>(data & 0xFFFF)) * 10;
@@ -566,7 +594,6 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         item->setValue(temp);
                         Event e(RSensors, RStateTemperature, sensorNode->id(), item);
                         enqueueEvent(e);
-
                     }
                 }
                 break;
