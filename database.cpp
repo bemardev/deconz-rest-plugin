@@ -3235,6 +3235,8 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
             item->setValue(0);
             item = sensor.addItem(DataTypeBool, RStateAlarm);
             item->setValue(false);
+            sensor.addItem(DataTypeUInt8, RConfigMelody);
+            sensor.addItem(DataTypeString, RConfigPreset);
         }
         else if (sensor.type().endsWith(QLatin1String("Humidity")))
         {

@@ -6182,6 +6182,8 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         sensorNode.addItem(DataTypeUInt16, RStateHumidity);
         item = sensorNode.addItem(DataTypeBool, RStateAlarm);
         item->setValue(false);
+        sensorNode.addItem(DataTypeUInt8, RConfigMelody);
+        sensorNode.addItem(DataTypeString, RConfigPreset);
     }
     else if (sensorNode.type().endsWith(QLatin1String("Temperature")))
     {

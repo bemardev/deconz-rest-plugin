@@ -502,17 +502,22 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     }
                 }
                 break;
-                case 0x0168: // Alarm
+                case 0x0168: // Alarm siren
                 {
-                    bool alarm = false;
-                    if (data == 1) { alarm = true; }
-
-                    ResourceItem *item = sensorNode->item(RStateAlarm);
-
-                    if (item && item->toBool() != alarm)
+                    QString mode;
+                    if      (data == 0) { mode = QLatin1String("off"); }
+                    else if (data == 1) { mode = QLatin1String("both"); }
+                    else
                     {
-                        item->setValue(alarm);
-                        Event e(RSensors, RStateAlarm, sensorNode->id(), item);
+                        return;
+                    }
+                    
+                    ResourceItem *item = sensorNode->item(RConfigPreset);
+
+                    if (item && item->toString() != mode)
+                    {
+                        item->setValue(mode);
+                        Event e(RSensors, RConfigPreset, sensorNode->id(), item);
                         enqueueEvent(e);
                     }
                 }
@@ -554,6 +559,76 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         item->setValue(bat);
                         Event e(RSensors, RStateLowBattery, sensorNode->id(), item);
                         enqueueEvent(e);
+                    }
+                }
+                break;
+                case 0x0171: // Alarm siren temperature
+                {
+                    ResourceItem *item = sensorNode->item(RConfigPreset);
+                    
+                    if (item)
+                    {
+                        QString mode;
+                        if (data == 0)
+                        {
+                            if (item->toString() == "both")
+                            {
+                                mode = QLatin1String("humidity");
+                            }
+                        }
+                        else if (data == 1)
+                        {
+                            if (item->toString() == "humidity")
+                            {
+                                mode = QLatin1String("both");
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+
+                        if (item->toString() != mode)
+                        {
+                            item->setValue(mode);
+                            Event e(RSensors, RConfigPreset, sensorNode->id(), item);
+                            enqueueEvent(e);
+                        }
+                    }
+                }
+                break;
+                case 0x0172: // Alarm siren humidity
+                {
+                    ResourceItem *item = sensorNode->item(RConfigPreset);
+                    
+                    if (item)
+                    {
+                        QString mode;
+                        if (data == 0)
+                        {
+                            if (item->toString() == "both")
+                            {
+                                mode = QLatin1String("temperature");
+                            }
+                        }
+                        else if (data == 1)
+                        {
+                            if (item->toString() == "temperature")
+                            {
+                                mode = QLatin1String("both");
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+
+                        if (item->toString() != mode)
+                        {
+                            item->setValue(mode);
+                            Event e(RSensors, RConfigPreset, sensorNode->id(), item);
+                            enqueueEvent(e);
+                        }
                     }
                 }
                 break;
@@ -791,6 +866,19 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     {
                         item->setValue(mode);
                         enqueueEvent(Event(RSensors, RConfigMode, sensorNode->id(), item));
+                    }
+                }
+                break;
+                case 0x0466 : // melody
+                {
+                    quint8 melody = (static_cast<qint8>(data & 0xFF));
+
+                    ResourceItem *item = sensorNode->item(RConfigMelody);
+
+                    if (item && item->toNumber() != melody)
+                    {
+                        item->setValue(melody);
+                        enqueueEvent(Event(RSensors, RConfigMelody, sensorNode->id(), item));
                     }
                 }
                 break;
