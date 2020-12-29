@@ -3225,7 +3225,7 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
             item = sensor.addItem(DataTypeUInt16, RStateSpectralZ);
             item->setValue(0);
         }
-        else if (sensor.type().endsWith(QLatin1String("Tuya")))
+        else if (sensor.type().endsWith(QLatin1String("Tuya"))) // TUYA Sensor.
         {
             clusterId = clusterId ? clusterId : TUYA_CLUSTER_ID;
 
