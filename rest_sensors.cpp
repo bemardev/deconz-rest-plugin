@@ -1467,6 +1467,24 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
                     }
                 }
+                else if ((rid.suffix == RConfigPreset) && (sensor->manufacturer() == QLatin1String("_TYST11_d0yu2xgi")))
+                {
+                    QString presetSet = map[pi.key()].toString();
+                    if (presetSet == "off")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x00",1));
+                    }
+                    else if (presetSet == "both")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                    }
+                    else
+                    {
+                        rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
+                    }
+                }
                 else if (rid.suffix == RConfigLocked)
                 {
                     if (map[pi.key()].type() == QVariant::Bool)
@@ -1718,6 +1736,19 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     {
                         rspItemState[QString("Error : unknown Window open setting for %1").arg(sensor->modelId())] = map[pi.key()];
                     }
+                }
+                else if (rid.suffix == RConfigMelody)
+                {
+                    int16_t melody = map[pi.key()].toUInt(&ok);
+                    
+                    QByteArray data;
+                    data.append(static_cast<qint8>(melody & 0xff));
+                    
+                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x66, data))
+                    {
+                        updated = true;
+                    }
+                    
                 }
                 else if (rid.suffix == RConfigFanMode)
                 {

@@ -2201,9 +2201,11 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             // _TYST11_jeaxp72v same
             // _TYST11_kfvq6avy same
             // _TYST11_c88teujp same
+            // _TYST11_d0yu2xgi siren passive
             if ((lightNode.manufacturer() == QLatin1String("_TYST11_ckud7u2l")) ||
                 (lightNode.manufacturer() == QLatin1String("_TYST11_kfvq6avy")) ||
                 (lightNode.manufacturer() == QLatin1String("_TYST11_c88teujp")) ||
+                (lightNode.manufacturer() == QLatin1String("_TYST11_d0yu2xgi")) ||
                 (lightNode.manufacturer() == QLatin1String("_TYST11_jeaxp72v")) )
             {
                 hasServerOnOff = false;
