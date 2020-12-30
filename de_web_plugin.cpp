@@ -3076,7 +3076,7 @@ LightNode *DeRestPluginPrivate::updateLightNode(const deCONZ::NodeEvent &event)
                     if (ia->id() == 0x0000) // Lock state
                     {
                         bool on = ia->numericValue().u8 == 1;
-                        DBG_Printf(DBG_INFO, "Status dørlås: %u\n", (uint)ia->numericValue().u8);
+                        DBG_Printf(DBG_INFO, "Status doorlock : %u\n", (uint)ia->numericValue().u8);
                         ResourceItem *item = lightNode->item(RStateOn);
                         if (item && item->toBool() != on)
                         {
@@ -3086,6 +3086,19 @@ LightNode *DeRestPluginPrivate::updateLightNode(const deCONZ::NodeEvent &event)
                             enqueueEvent(e);
                             updated = true;
                             pushZclValueDb(event.node()->address().ext(), event.endpoint(), event.clusterId(), ia->id(), ia->numericValue().u8);
+                            
+                            //update too the sensor if present
+                            Sensor *sensorDL = getSensorNodeForAddressAndEndpoint(event.node()->address(), event.endpoint(), QLatin1String("ZHAOpenClose"));
+                            if (sensorDL)
+                            {
+                                item = sensorDL->item(RStateOn);
+                                if (item && item->toBool() != on)
+                                {
+                                    item->setValue(on);
+                                    enqueueEvent(Event(RSensors, RStateOn, sensorDL->id(), item));
+                                }
+                            }
+                            
                         }
                         else
                         {
@@ -5143,6 +5156,10 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
                         // fpSwitch.inClusters.push_back(DOOR_LOCK_CLUSTER_ID);
                         fpVibrationSensor.inClusters.push_back(DOOR_LOCK_CLUSTER_ID);
                     }
+                    if (modelId == QLatin1String("YRD226/246 TSDB")) // Yale
+                    {
+                        fpOpenCloseSensor.inClusters.push_back(DOOR_LOCK_CLUSTER_ID);
+                    }
                 }
                     break;
 
@@ -5457,6 +5474,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
 
         // ZHAOpenClose
         if (fpOpenCloseSensor.hasInCluster(IAS_ZONE_CLUSTER_ID) ||
+            fpOpenCloseSensor.hasInCluster(DOOR_LOCK_CLUSTER_ID) ||
             fpOpenCloseSensor.hasInCluster(ONOFF_CLUSTER_ID))
         {
             fpOpenCloseSensor.endpoint = i->endpoint();
@@ -6047,6 +6065,11 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         else if (sensorNode.fingerPrint().hasInCluster(ONOFF_CLUSTER_ID))
         {
             clusterId = ONOFF_CLUSTER_ID;
+        }
+        else if (sensorNode.fingerPrint().hasInCluster(DOOR_LOCK_CLUSTER_ID))
+        {
+            clusterId = DOOR_LOCK_CLUSTER_ID;
+            sensorNode.addItem(DataTypeString, RStateLockState);
         }
         item = sensorNode.addItem(DataTypeBool, RStateOpen);
         item->setValue(false);
