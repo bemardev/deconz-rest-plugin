@@ -5968,25 +5968,6 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
             }
         }
 
-        // ZHATuya
-        if (fpTuyaSensor.hasInCluster(TUYA_CLUSTER_ID))
-        {
-            fpTuyaSensor.endpoint = i->endpoint();
-            fpTuyaSensor.deviceId = i->deviceId();
-            fpTuyaSensor.profileId = i->profileId();
-
-            sensor = getSensorNodeForFingerPrint(node->address().ext(), fpTuyaSensor, "ZHATuya");
-            if (!sensor || sensor->deletedState() != Sensor::StateNormal)
-            {
-                addSensorNode(node, fpTuyaSensor, "ZHATuya", modelId, manufacturer);
-            }
-            else
-            {
-                checkSensorNodeReachable(sensor);
-                checkIasEnrollmentStatus(sensor);
-            }
-        }
-
         // ZHAAirQuality
         if (fpAirQualitySensor.hasInCluster(0xFC03)      // Develco specific -> VOC Management
             || fpAirQualitySensor.hasInCluster(BOSCH_AIR_QUALITY_CLUSTER_ID)) // Bosch Air quality sensor
@@ -6004,6 +5985,37 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
             {
                 checkSensorNodeReachable(sensor);
             }
+        }
+        
+        // ZHATuya
+        if (fpTuyaSensor.hasInCluster(TUYA_CLUSTER_ID))
+        {
+            fpTuyaSensor.endpoint = i->endpoint();
+            fpTuyaSensor.deviceId = i->deviceId();
+            fpTuyaSensor.profileId = i->profileId();
+            
+            fpTuyaSensor.inClusters.push_back(TEMPERATURE_MEASUREMENT_CLUSTER_ID);
+            fpTuyaSensor.inClusters.push_back(RELATIVE_HUMIDITY_CLUSTER_ID);
+            fpTuyaSensor.inClusters.push_back(IAS_ZONE_CLUSTER_ID);
+
+            //So create 3 sensors for this one
+            const QStringList SensorList = { "ZHATemperature","ZHAHumidity","ZHAAlarm"};
+            
+            for (int l = 0; l < SensorList.size(); l++)
+            {
+                
+                sensor = getSensorNodeForFingerPrint(node->address().ext(), fpTuyaSensor, SensorList[l]);
+                if (!sensor || sensor->deletedState() != Sensor::StateNormal)
+                {
+                    addSensorNode(node, fpTuyaSensor, SensorList[l], modelId, manufacturer);
+                }
+                else
+                {
+                    checkSensorNodeReachable(sensor);
+                    checkIasEnrollmentStatus(sensor);
+                }
+            }
+            
         }
 
     }
