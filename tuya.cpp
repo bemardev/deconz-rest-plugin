@@ -802,7 +802,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                 break;
                 case 0x026A : // Siren Humidity
                 {
-                    qint16 Hum = (static_cast<qint16>(data & 0xFFFF)) * 10;
+                    qint16 Hum = (static_cast<qint16>(data & 0xFFFF)) * 100;
                     ResourceItem *item = sensorNode->item(RStateHumidity);
 
                     if (item && item->toNumber() != Hum)

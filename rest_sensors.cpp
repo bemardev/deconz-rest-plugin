@@ -1480,9 +1480,24 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
                     }
+                    else if (presetSet == "humidity")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                    }
+                    else if (presetSet == "temperature")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
+                    }
                     else
                     {
-                        rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
+                        //rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
+                        rsp.list.append(errorToMap(ERR_ACTION_ERROR, QString("/sensors/%1/config/%2").arg(id).arg(pi.key()).toHtmlEscaped(),QString("Could not set attribute")));
+                        rsp.httpStatus = HttpStatusBadRequest;
+                        return REQ_READY_SEND;
                     }
                 }
                 else if (rid.suffix == RConfigLocked)
