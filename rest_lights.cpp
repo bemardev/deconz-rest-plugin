@@ -561,10 +561,6 @@ int DeRestPluginPrivate::setLightState(const ApiRequest &req, ApiResponse &rsp)
     {
         return setWindowCoveringState(req, rsp, taskRef, map);
     }
-    else if (taskRef.lightNode->type() == QLatin1String("Warning device"))
-    {
-        return setWarningDeviceState(req, rsp, taskRef, map);
-    }
     else if (isXmasLightStrip(taskRef.lightNode))
     {
         return setXmasLightStripState(req, rsp, taskRef, map);
@@ -589,6 +585,11 @@ int DeRestPluginPrivate::setLightState(const ApiRequest &req, ApiResponse &rsp)
             return setTuyaDeviceState(req, rsp, taskRef, map);
         }
     }
+    else if (taskRef.lightNode->type() == QLatin1String("Warning device")) // Put it here because some tuya device are Warning device but need to be process by tuya part
+    {
+        return setWarningDeviceState(req, rsp, taskRef, map);
+    }
+
     // Danalock support. You need to check for taskRef.lightNode->type() == QLatin1String("Door lock"), similar to what I've done under hasAlert for the Siren.
     bool isDoorLockDevice = false;
     if (taskRef.lightNode->type() == QLatin1String("Door Lock"))

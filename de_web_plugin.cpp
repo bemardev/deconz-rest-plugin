@@ -2571,6 +2571,12 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
         if (lightNode.manufacturer() == QString("_TYST11_d0yu2xgi"))
         {
             removeItem(RStateOn);
+            ResourceItem *Type = lightNode.item(RAttrType);
+            DBG_Assert(Type);
+            if (Type)
+            {
+                Type->setValue(QString("Warning device"));
+            }
             lightNode.setNeedSaveDatabase(true);
         }
 
