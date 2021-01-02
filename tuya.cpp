@@ -284,6 +284,36 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                 lightNode = nullptr;
             }
         }
+        //Some device are more than 1 sensors for the same endpoint, so trying to take the good one
+        if (sensorNode && (sensorNode->manufacturer() == QLatin1String("_TYST11_d0yu2xgi")) )
+        {
+            switch (dp)
+            {
+                //alarm sensor
+                case 0x0168 :
+                case 0x0171 :
+                case 0x0172 :
+                case 0x0466 :
+                {
+                    sensorNode = getSensorNodeForAddressAndEndpoint(ind.srcAddress(), ind.srcEndpoint(), QLatin1String("ZHAAlarm"));
+                }
+                break;
+                //temperature
+                case 0x0269:
+                {
+                    sensorNode = getSensorNodeForAddressAndEndpoint(ind.srcAddress(), ind.srcEndpoint(), QLatin1String("ZHATemperature"));
+                }
+                break;
+                //Humidity
+                case 0x026A:
+                {
+                    sensorNode = getSensorNodeForAddressAndEndpoint(ind.srcAddress(), ind.srcEndpoint(), QLatin1String("ZHAHumidity"));
+                }
+                break;
+                default:
+                break;
+            }
+        }
 
         if (lightNode)
         {

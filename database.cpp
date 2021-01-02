@@ -3225,19 +3225,6 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
             item = sensor.addItem(DataTypeUInt16, RStateSpectralZ);
             item->setValue(0);
         }
-        else if (sensor.type().endsWith(QLatin1String("Tuya"))) // TUYA Sensor.
-        {
-            clusterId = clusterId ? clusterId : TUYA_CLUSTER_ID;
-
-            item = sensor.addItem(DataTypeInt16, RStateTemperature);
-            item->setValue(0);
-            item = sensor.addItem(DataTypeUInt16, RStateHumidity);
-            item->setValue(0);
-            item = sensor.addItem(DataTypeBool, RStateAlarm);
-            item->setValue(false);
-            sensor.addItem(DataTypeUInt8, RConfigMelody);
-            sensor.addItem(DataTypeString, RConfigPreset);
-        }
         else if (sensor.type().endsWith(QLatin1String("Humidity")))
         {
             if (sensor.fingerPrint().hasInCluster(RELATIVE_HUMIDITY_CLUSTER_ID))
@@ -3364,6 +3351,12 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
             }
             item = sensor.addItem(DataTypeBool, RStateAlarm);
             item->setValue(false);
+
+            if (sensor.manufacturer() == QLatin1String("_TYST11_d0yu2xgi"))
+            {
+                sensor.addItem(DataTypeUInt8, RConfigMelody);
+                sensor.addItem(DataTypeString, RConfigPreset);
+            }
         }
         else if (sensor.type().endsWith(QLatin1String("CarbonMonoxide")))
         {

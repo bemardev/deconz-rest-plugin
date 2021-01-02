@@ -6188,17 +6188,6 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         sensorNode.addItem(DataTypeUInt16, RStateSpectralY);
         sensorNode.addItem(DataTypeUInt16, RStateSpectralZ);
     }
-    else if (sensorNode.type().endsWith(QLatin1String("Tuya")))
-    {
-        clusterId = TUYA_CLUSTER_ID;
-
-        sensorNode.addItem(DataTypeInt16, RStateTemperature);
-        sensorNode.addItem(DataTypeUInt16, RStateHumidity);
-        item = sensorNode.addItem(DataTypeBool, RStateAlarm);
-        item->setValue(false);
-        sensorNode.addItem(DataTypeUInt8, RConfigMelody);
-        sensorNode.addItem(DataTypeString, RConfigPreset);
-    }
     else if (sensorNode.type().endsWith(QLatin1String("Temperature")))
     {
         if (sensorNode.fingerPrint().hasInCluster(TEMPERATURE_MEASUREMENT_CLUSTER_ID))
@@ -6282,6 +6271,12 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         }
         item = sensorNode.addItem(DataTypeBool, RStateAlarm);
         item->setValue(false);
+        
+        if (sensorNode.manufacturer() == QLatin1String("_TYST11_d0yu2xgi"))
+        {
+            sensorNode.addItem(DataTypeUInt8, RConfigMelody);
+            sensorNode.addItem(DataTypeString, RConfigPreset);
+        }
     }
     else if (sensorNode.type().endsWith(QLatin1String("CarbonMonoxide")))
     {
