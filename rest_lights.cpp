@@ -583,7 +583,7 @@ int DeRestPluginPrivate::setLightState(const ApiRequest &req, ApiResponse &rsp)
         else if (taskRef.lightNode->item(RStateColorMode))
         {
         }
-        //switch
+        //switch + siren
         else
         {
             return setTuyaDeviceState(req, rsp, taskRef, map);
@@ -2019,6 +2019,56 @@ int DeRestPluginPrivate::setTuyaDeviceState(const ApiRequest &req, ApiResponse &
                 rspItemState[QString("/lights/%1/state/on").arg(id)] = targetOn;
                 rspItem["success"] = rspItemState;
                 rsp.list.append(rspItem);
+
+                //Not needed ?
+                //taskRef.lightNode->setValue(RStateOn, targetOn);
+            }
+            else
+            {
+                rsp.list.append(errorToMap(ERR_INTERNAL_ERROR, QString("/lights/%1").arg(id), QString("Internal error, %1").arg(ERR_BRIDGE_BUSY)));
+            }
+        }
+        else
+        {
+            rsp.list.append(errorToMap(ERR_PARAMETER_NOT_AVAILABLE, QString("/lights/%1/state/on").arg(id), QString("parameter, not available")));
+            rsp.httpStatus = HttpStatusBadRequest;
+            return REQ_READY_SEND;
+        }
+    }
+    else if (map.contains("alert"))
+    {
+        if (map["alert"].type() == QVariant::String)
+        {
+            bool ok = false;
+            qint8 button = 0x01;
+            QByteArray data;
+            bool run = false;
+            
+            if (map["alert"].toString() == "lselect")
+            {
+                run = true;
+            }
+
+            DBG_Printf(DBG_INFO, "Tuya debug 17: EP: %d ID : %s\n",  ep , qPrintable(id));
+
+            if (run)
+            {
+                data = QByteArray("\x01",1);
+            }
+            else
+            {
+                data = QByteArray("\x00",1);
+            }
+
+            ok = SendTuyaRequest(taskRef, TaskTuyaRequest , DP_TYPE_BOOL, 0x68 , data );
+
+            if (ok)
+            {
+                //QVariantMap rspItem;
+                //QVariantMap rspItemState;
+                //rspItemState[QString("/lights/%1/state/alert").arg(id)] = targetOn;
+                //rspItem["success"] = rspItemState;
+                //rsp.list.append(rspItem);
 
                 //Not needed ?
                 //taskRef.lightNode->setValue(RStateOn, targetOn);

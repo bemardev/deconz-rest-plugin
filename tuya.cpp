@@ -283,6 +283,11 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             {
                 lightNode = nullptr;
             }
+            
+            if (dp == 0x0168) // Siren alarm
+            {
+                sensorNode = nullptr;
+            }
         }
         //Some device are more than 1 sensors for the same endpoint, so trying to take the good one
         if (sensorNode && (sensorNode->manufacturer() == QLatin1String("_TYST11_d0yu2xgi")) )
@@ -290,7 +295,6 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             switch (dp)
             {
                 //alarm sensor
-                case 0x0168 :
                 case 0x0171 :
                 case 0x0172 :
                 case 0x0466 :
@@ -364,6 +368,21 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     default:
                     break;
 
+                }
+            }
+            //siren
+            else if (lightNode->manufacturer() == QLatin1String("_TYST11_d0yu2xgi"))
+            {
+                if (dp == 0x0168)
+                {
+                    if (data == 0x00)
+                    {
+                        lightNode->setValue(RStateAlert, QLatin1String("none"));
+                    }
+                    else
+                    {
+                        lightNode->setValue(RStateAlert, QLatin1String("lselect"));
+                    }                    
                 }
             }
             else
@@ -529,26 +548,6 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     {
                         item->setValue(mode);
                         enqueueEvent(Event(RSensors, RConfigMode, sensorNode->id(), item));
-                    }
-                }
-                break;
-                case 0x0168: // Alarm siren
-                {
-                    QString mode;
-                    if      (data == 0) { mode = QLatin1String("off"); }
-                    else if (data == 1) { mode = QLatin1String("both"); }
-                    else
-                    {
-                        return;
-                    }
-                    
-                    ResourceItem *item = sensorNode->item(RConfigPreset);
-
-                    if (item && item->toString() != mode)
-                    {
-                        item->setValue(mode);
-                        Event e(RSensors, RConfigPreset, sensorNode->id(), item);
-                        enqueueEvent(e);
                     }
                 }
                 break;

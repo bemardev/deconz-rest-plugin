@@ -2191,8 +2191,10 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             }
             //Tuya white list
             // _TYST11_wmcdj3aq is covering with cluster 0x0006
-            // _TYST11_xu1rkty3 is covering with only 2 endpoints
-            if (lightNode.manufacturer() == QLatin1String("_TYST11_xu1rkty3"))
+            // _TYST11_xu1rkty3 is covering with only 2 clusters
+            // _TYST11_d0yu2xgi siren with only 2 clusters
+            if ((lightNode.manufacturer() == QLatin1String("_TYST11_xu1rkty3")) ||
+                (lightNode.manufacturer() == QLatin1String("_TYST11_d0yu2xgi")) )
             {
                 hasServerOnOff = true;
             }
@@ -2201,11 +2203,9 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             // _TYST11_jeaxp72v same
             // _TYST11_kfvq6avy same
             // _TYST11_c88teujp same
-            // _TYST11_d0yu2xgi siren passive
             if ((lightNode.manufacturer() == QLatin1String("_TYST11_ckud7u2l")) ||
                 (lightNode.manufacturer() == QLatin1String("_TYST11_kfvq6avy")) ||
                 (lightNode.manufacturer() == QLatin1String("_TYST11_c88teujp")) ||
-                (lightNode.manufacturer() == QLatin1String("_TYST11_d0yu2xgi")) ||
                 (lightNode.manufacturer() == QLatin1String("_TYST11_jeaxp72v")) )
             {
                 hasServerOnOff = false;
@@ -2565,6 +2565,12 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             {
                 Type->setValue(QString("Window covering device"));
             }
+            lightNode.setNeedSaveDatabase(true);
+        }
+        //Siren
+        if (lightNode.manufacturer() == QString("_TYST11_d0yu2xgi"))
+        {
+            removeItem(RStateOn);
             lightNode.setNeedSaveDatabase(true);
         }
 

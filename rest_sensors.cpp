@@ -1470,25 +1470,18 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                 else if ((rid.suffix == RConfigPreset) && (sensor->manufacturer() == QLatin1String("_TYST11_d0yu2xgi")))
                 {
                     QString presetSet = map[pi.key()].toString();
-                    if (presetSet == "off")
+                    if (presetSet == "both")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x00",1));
-                    }
-                    else if (presetSet == "both")
-                    {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
                     }
                     else if (presetSet == "humidity")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
                     }
                     else if (presetSet == "temperature")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x68, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
                     }
