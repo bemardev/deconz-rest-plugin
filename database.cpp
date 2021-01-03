@@ -3517,6 +3517,7 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
                     sensor.modelId() == QLatin1String("SLR1b") ||           // Hive 
                     sensor.modelId().startsWith(QLatin1String("TH112")) ||  // Sinope
                     sensor.modelId() == QLatin1String("GbxAXL2") ||         // Tuya
+                    sensor.modelId() == QLatin1String("88teujp") ||         // Tuya
                     sensor.modelId() == QLatin1String("kud7u2l") ||         // Tuya
                     sensor.modelId() == QLatin1String("902010/32") ||       // Bitron
                    (sensor.manufacturer() == QLatin1String("_TZE200_ckud7u2l")) ||          // Tuya
@@ -3535,9 +3536,10 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
                     sensor.addItem(DataTypeString, RConfigMode);
                 }
 
-                if (sensor.modelId() == QLatin1String("kud7u2l") || // Tuya
-                    sensor.modelId() == QLatin1String("GbxAXL2") || // Tuya
-                   (sensor.manufacturer() == QLatin1String("_TZE200_ckud7u2l")) )   // Tuya
+                if ((sensor.modelId() == QLatin1String("kud7u2l")) || // Tuya
+                    (sensor.modelId() == QLatin1String("GbxAXL2")) || // Tuya
+                    (sensor.modelId() == QLatin1String("88teujp")) || // Tuya
+                    (sensor.manufacturer() == QLatin1String("_TZE200_ckud7u2l")) )   // Tuya
                 {
                     sensor.addItem(DataTypeUInt8, RStateValve);
                     item = sensor.addItem(DataTypeBool, RStateLowBattery);
