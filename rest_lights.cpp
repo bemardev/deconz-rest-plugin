@@ -2041,7 +2041,6 @@ int DeRestPluginPrivate::setTuyaDeviceState(const ApiRequest &req, ApiResponse &
         if (map["alert"].type() == QVariant::String)
         {
             bool ok = false;
-            qint8 button = 0x01;
             QByteArray data;
             bool run = false;
             
@@ -2050,7 +2049,7 @@ int DeRestPluginPrivate::setTuyaDeviceState(const ApiRequest &req, ApiResponse &
                 run = true;
             }
 
-            DBG_Printf(DBG_INFO, "Tuya debug 17: EP: %d ID : %s\n",  ep , qPrintable(id));
+            DBG_Printf(DBG_INFO, "Tuya debug 17: ID : %s\n",  qPrintable(id));
 
             if (run)
             {
