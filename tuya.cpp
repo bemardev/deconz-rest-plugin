@@ -284,9 +284,16 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                 lightNode = nullptr;
             }
             
-            if (dp == 0x0168) // Siren alarm
+            if (sensorNode->manufacturer() == QLatin1String("_TYST11_d0yu2xgi"))
             {
-                sensorNode = nullptr;
+                if (dp == 0x0168) // Siren alarm
+                {
+                    sensorNode = nullptr;
+                }
+                else
+                {
+                    lightNode = nullptr;
+                }
             }
         }
         //Some device are more than 1 sensors for the same endpoint, so trying to take the good one
