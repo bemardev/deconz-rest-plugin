@@ -377,11 +377,11 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                 {
                     if (data == 0x00)
                     {
-                        lightNode->setValue(RStateAlert, QLatin1String("none"));
+                        lightNode->setValue(RStateAlert, QString("none"));
                     }
                     else
                     {
-                        lightNode->setValue(RStateAlert, QLatin1String("lselect"));
+                        lightNode->setValue(RStateAlert, QString("lselect"));
                     }                    
                 }
             }
