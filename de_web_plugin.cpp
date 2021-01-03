@@ -2570,7 +2570,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
         //Siren
         if (lightNode.manufacturer() == QString("_TYST11_d0yu2xgi"))
         {
-            removeItem(RStateOn);
+            lightNode.removeItem(RStateOn);
             ResourceItem *Type = lightNode.item(RAttrType);
             DBG_Assert(Type);
             if (Type)
