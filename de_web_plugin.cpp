@@ -6288,6 +6288,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         {
             sensorNode.addItem(DataTypeUInt8, RConfigMelody);
             sensorNode.addItem(DataTypeString, RConfigPreset);
+            sensorNode.addItem(DataTypeUInt8, RConfigVolume);
         }
     }
     else if (sensorNode.type().endsWith(QLatin1String("CarbonMonoxide")))

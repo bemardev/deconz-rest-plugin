@@ -1758,6 +1758,21 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     }
                     
                 }
+                else if (rid.suffix == RConfigVolume)
+                {
+                    int16_t volume = map[pi.key()].toUInt(&ok);
+                    
+                    if (volume > 2) { volume = 2; }
+                    
+                    QByteArray data;
+                    data.append(static_cast<qint8>(volume & 0xff));
+                    
+                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x74, data))
+                    {
+                        updated = true;
+                    }
+                    
+                }
                 else if (rid.suffix == RConfigFanMode)
                 {
                     if (map[pi.key()].type() == QVariant::String && map[pi.key()].toString().size() <= 6)

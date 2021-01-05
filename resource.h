@@ -156,6 +156,8 @@ extern const char *RConfigPowerOnCt;
 extern const char *RConfigPowerOnLevel;
 extern const char *RConfigPreset;
 extern const char *RConfigMelody;
+extern const char *RConfigThreshold;
+extern const char *RConfigVolume;
 extern const char *RConfigReachable;
 extern const char *RConfigSchedule;
 extern const char *RConfigScheduleOn;

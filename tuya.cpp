@@ -794,7 +794,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                 {
                     if (sensorNode->modelId() == QLatin1String("0yu2xgi")) //siren
                     {
-                        qint16 temp = (static_cast<qint16>(data & 0xFFFF)) * 10;
+                        qint16 temp = (static_cast<qint16>(data & 0xFFFF)) * 10 + 200;
                         ResourceItem *item = sensorNode->item(RStateTemperature);
 
                         if (item && item->toNumber() != temp)
@@ -815,6 +815,23 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     {
                         item->setValue(Hum);
                         Event e(RSensors, RStateHumidity, sensorNode->id(), item);
+                        enqueueEvent(e);
+                    }
+                }
+                break;
+                case 0x026B : // Siren alarm min threshold
+                {
+                    qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
+                    ResourceItem *item = sensorNode->item(RConfigThreshold);
+
+                    if (item)
+                    {
+                        QStringList l;
+                        l = QStringList();
+                        l << min << "0" << "0" << "0";
+                        
+                        item->setValue(l.join(','));
+                        Event e(RSensors, RConfigThreshold, sensorNode->id(), item);
                         enqueueEvent(e);
                     }
                 }
@@ -915,6 +932,19 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     {
                         item->setValue(melody);
                         enqueueEvent(Event(RSensors, RConfigMelody, sensorNode->id(), item));
+                    }
+                }
+                break;
+                case 0x0474 : // volume
+                {
+                    quint8 volume = (static_cast<qint8>(data & 0xFF));
+
+                    ResourceItem *item = sensorNode->item(RConfigVolume);
+
+                    if (item && item->toNumber() != volume)
+                    {
+                        item->setValue(volume);
+                        enqueueEvent(Event(RSensors, RConfigVolume, sensorNode->id(), item));
                     }
                 }
                 break;
