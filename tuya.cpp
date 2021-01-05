@@ -828,7 +828,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     {
                         QStringList l;
                         l = QStringList();
-                        l << min << "0" << "0" << "0";
+                        l << QString::number(min) << "0" << "0" << "0";
                         
                         item->setValue(l.join(','));
                         Event e(RSensors, RConfigThreshold, sensorNode->id(), item);
