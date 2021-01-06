@@ -819,7 +819,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     }
                 }
                 break;
-                case 0x026B : // Siren alarm min threshold
+                case 0x026B : // min alarm temperature threshold
                 {
                     qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
                     ResourceItem *item = sensorNode->item(RConfigThreshold);
@@ -836,26 +836,40 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     }
                 }
                 break;
+                case 0x026C : // max alarm temperature threshold
+                {
+                }
+                break;
                 case 0x026D : // Valve position
                 {
-                    quint8 valve = (static_cast<qint8>(data & 0xFF));
-                    bool on = valve > 3;
-
-                    ResourceItem *item = sensorNode->item(RStateOn);
-                    if (item)
+                    if (sensorNode->modelId() == QLatin1String("0yu2xgi")) // min alarm humidity threshold
                     {
-                        if (item->toBool() != on)
+                    }
+                    else
+                    {
+                        quint8 valve = (static_cast<qint8>(data & 0xFF));
+                        bool on = valve > 3;
+
+                        ResourceItem *item = sensorNode->item(RStateOn);
+                        if (item)
                         {
-                            item->setValue(on);
-                            enqueueEvent(Event(RSensors, RStateOn, sensorNode->id(), item));
+                            if (item->toBool() != on)
+                            {
+                                item->setValue(on);
+                                enqueueEvent(Event(RSensors, RStateOn, sensorNode->id(), item));
+                            }
+                        }
+                        item = sensorNode->item(RStateValve);
+                        if (item && item->toNumber() != valve)
+                        {
+                            item->setValue(valve);
+                            enqueueEvent(Event(RSensors, RStateValve, sensorNode->id(), item));
                         }
                     }
-                    item = sensorNode->item(RStateValve);
-                    if (item && item->toNumber() != valve)
-                    {
-                        item->setValue(valve);
-                        enqueueEvent(Event(RSensors, RStateValve, sensorNode->id(), item));
-                    }
+                }
+                break;
+                case 0x026E : // max alarm humidity threshold
+                {
                 }
                 break;
                 case 0x0402 : // preset for moe
