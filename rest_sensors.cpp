@@ -1050,6 +1050,15 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         return REQ_READY_SEND;
                     }
                 }
+                else if (rid.suffix == RConfigThreshold)
+                {
+                    QString Value = map[pi.key()].toString();
+                    
+                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6B, QByteArray("\x00",1));
+                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6C, QByteArray("\x23",1));
+                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6D, QByteArray("\x00",1));
+                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x64",1));
+                }
             }
 
             //Special part for thermostat
