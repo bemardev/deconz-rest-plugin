@@ -992,6 +992,65 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                 rsp.list.append(rspItem);
                 return REQ_READY_SEND;
             }
+            
+            //special part for tuya siren
+            if (sensor->manufacturer() == QLatin1String("_TYST11_d0yu2xgi"))
+            {
+                if (rid.suffix == RConfigMelody)
+                {
+                    int16_t melody = map[pi.key()].toUInt(&ok);
+                    
+                    QByteArray data;
+                    data.append(static_cast<qint8>(melody & 0xff));
+                    
+                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x66, data))
+                    {
+                        updated = true;
+                    }
+                    
+                }
+                else if (rid.suffix == RConfigVolume)
+                {
+                    int16_t volume = map[pi.key()].toUInt(&ok);
+                    
+                    if (volume > 2) { volume = 2; }
+                    
+                    QByteArray data;
+                    data.append(static_cast<qint8>(volume & 0xff));
+                    
+                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x74, data))
+                    {
+                        updated = true;
+                    }
+                    
+                }
+                else if (rid.suffix == RConfigPreset)
+                {
+                    QString presetSet = map[pi.key()].toString();
+                    if (presetSet == "both")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                    }
+                    else if (presetSet == "humidity")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                    }
+                    else if (presetSet == "temperature")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
+                    }
+                    else
+                    {
+                        //rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
+                        rsp.list.append(errorToMap(ERR_ACTION_ERROR, QString("/sensors/%1/config/%2").arg(id).arg(pi.key()).toHtmlEscaped(),QString("Could not set attribute")));
+                        rsp.httpStatus = HttpStatusBadRequest;
+                        return REQ_READY_SEND;
+                    }
+                }
+            }
 
             //Special part for thermostat
             if (sensor->type() == "ZHAThermostat")
@@ -1467,32 +1526,6 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
                     }
                 }
-                else if ((rid.suffix == RConfigPreset) && (sensor->manufacturer() == QLatin1String("_TYST11_d0yu2xgi")))
-                {
-                    QString presetSet = map[pi.key()].toString();
-                    if (presetSet == "both")
-                    {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
-                    }
-                    else if (presetSet == "humidity")
-                    {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
-                    }
-                    else if (presetSet == "temperature")
-                    {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
-                    }
-                    else
-                    {
-                        //rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
-                        rsp.list.append(errorToMap(ERR_ACTION_ERROR, QString("/sensors/%1/config/%2").arg(id).arg(pi.key()).toHtmlEscaped(),QString("Could not set attribute")));
-                        rsp.httpStatus = HttpStatusBadRequest;
-                        return REQ_READY_SEND;
-                    }
-                }
                 else if (rid.suffix == RConfigLocked)
                 {
                     if (map[pi.key()].type() == QVariant::Bool)
@@ -1744,34 +1777,6 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     {
                         rspItemState[QString("Error : unknown Window open setting for %1").arg(sensor->modelId())] = map[pi.key()];
                     }
-                }
-                else if (rid.suffix == RConfigMelody)
-                {
-                    int16_t melody = map[pi.key()].toUInt(&ok);
-                    
-                    QByteArray data;
-                    data.append(static_cast<qint8>(melody & 0xff));
-                    
-                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x66, data))
-                    {
-                        updated = true;
-                    }
-                    
-                }
-                else if (rid.suffix == RConfigVolume)
-                {
-                    int16_t volume = map[pi.key()].toUInt(&ok);
-                    
-                    if (volume > 2) { volume = 2; }
-                    
-                    QByteArray data;
-                    data.append(static_cast<qint8>(volume & 0xff));
-                    
-                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x74, data))
-                    {
-                        updated = true;
-                    }
-                    
                 }
                 else if (rid.suffix == RConfigFanMode)
                 {
