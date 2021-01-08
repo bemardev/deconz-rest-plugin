@@ -1042,6 +1042,11 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
                     }
+                    if (presetSet == "off")
+                    {
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
+                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
+                    }
                     else
                     {
                         //rspItemState[QString("error unknown preset for %1").arg(sensor->modelId())] = map[pi.key()];
@@ -1052,12 +1057,19 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                 }
                 else if (rid.suffix == RConfigThreshold)
                 {
-                    QString Value = map[pi.key()].toString();
-                    
-                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6B, QByteArray("\x00",1));
-                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6C, QByteArray("\x23",1));
-                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6D, QByteArray("\x00",1));
-                    SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x64",1));
+                    //if (map[pi.key()].type() == QVariant::List)
+                    {
+                        //QVariantList setting = map[pi.key()].toList();
+                        
+                        //if ((setting.size() == 4) && (setting[0].type() == QVariant::Double) && (setting[1].type() == QVariant::Double) && (setting[2].type() == QVariant::Double) && && (setting[3].type() == QVariant::Double))
+                        {
+                            //data.append(static_cast<qint8>(setting[1].toUInt()));
+                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6B, QByteArray("\x00",1));
+                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6C, QByteArray("\x23",1));
+                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6D, QByteArray("\x00",1));
+                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x64",1));
+                        }
+                    }
                 }
             }
 
