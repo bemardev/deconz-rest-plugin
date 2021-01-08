@@ -580,7 +580,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
                         ResourceItem *item = sensorNode->item(RConfigThreshold);
 
-                        if (item) && (!item->toString().isEmpty()))
+                        if ((item) && (!item->toString().isEmpty()))
                         {
                             QString values;
                             
