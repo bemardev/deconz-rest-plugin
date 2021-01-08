@@ -600,10 +600,10 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                                 valuesList << "0" << "0" << "0" << "0";
                             }
                             
-                            if (dp == 0x026B) { valuesList[0] == QString::number(min) }
-                            if (dp == 0x026C) { valuesList[1] == QString::number(min) }
-                            if (dp == 0x026D) { valuesList[2] == QString::number(min) }
-                            if (dp == 0x026E) { valuesList[3] == QString::number(min) }
+                            if (dp == 0x026B) { valuesList[0] == QString::number(min); }
+                            if (dp == 0x026C) { valuesList[1] == QString::number(min); }
+                            if (dp == 0x026D) { valuesList[2] == QString::number(min); }
+                            if (dp == 0x026E) { valuesList[3] == QString::number(min); }
                             
                             item->setValue(valuesList.join(','));
                             Event e(RSensors, RConfigThreshold, sensorNode->id(), item);
