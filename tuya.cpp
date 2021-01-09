@@ -555,6 +555,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(temp);
                             Event e(RSensors, RStateTemperature, sensorNode->id(), item);
                             enqueueEvent(e);
+                            update = true;
                         }
 
                     }
@@ -569,6 +570,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(Hum);
                             Event e(RSensors, RStateHumidity, sensorNode->id(), item);
                             enqueueEvent(e);
+                            update = true;
                         }
                     }
                     break;
@@ -1045,10 +1047,14 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
         if (sensorNode)
         {
             // Update Node Sensor
-            //updateEtag(sensorNode->etag);
-            //updateEtag(gwConfigEtag);
-            //sensorNode->setNeedSaveDatabase(true);
+            updateEtag(sensorNode->etag);
+            updateEtag(gwConfigEtag);
+            sensorNode->updateStateTimestamp();
+            sensorNode->setNeedSaveDatabase(true);
+            enqueueEvent(Event(RSensors, RStateLastUpdated, sensorNode->id()));
+            
             //queSaveDb(DB_SENSORS, DB_SHORT_SAVE_DELAY);
+            
         }
     }
 

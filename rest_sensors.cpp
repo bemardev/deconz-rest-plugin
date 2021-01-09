@@ -1042,7 +1042,7 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
                     }
-                    if (presetSet == "off")
+                    else if (presetSet == "off")
                     {
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
                         SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
