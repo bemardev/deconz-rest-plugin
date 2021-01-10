@@ -1041,6 +1041,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             // Update Node light
             updateEtag(lightNode->etag);
             updateEtag(gwConfigEtag);
+
             lightNode->setNeedSaveDatabase(true);
             saveDatabaseItems |= DB_LIGHTS;
         }
@@ -1049,10 +1050,11 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             // Update Node Sensor
             updateEtag(sensorNode->etag);
             updateEtag(gwConfigEtag);
+
             sensorNode->updateStateTimestamp();
-            sensorNode->setNeedSaveDatabase(true);
             enqueueEvent(Event(RSensors, RStateLastUpdated, sensorNode->id()));
             
+            sensorNode->setNeedSaveDatabase(true);
             //queSaveDb(DB_SENSORS, DB_SHORT_SAVE_DELAY);
             
         }
