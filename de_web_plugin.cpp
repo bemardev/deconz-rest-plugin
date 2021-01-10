@@ -2045,6 +2045,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
                 }
 
             }
+            else if ( (i->inClusters()[c].id() == LUMI_CLUSTER_ID) && (node->macCapabilities() & deCONZ::MacDeviceIsFFD) ) { hasServerOnOff = true; }
         }
 
         // check if node already exist
