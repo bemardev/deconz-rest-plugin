@@ -1065,9 +1065,9 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         {
                             //data.append(static_cast<qint8>(setting[1].toUInt()));
                             SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6B, QByteArray("\x00\x00\x00\x00",4));
-                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6C, QByteArray("\x00\x00\x00\x23",4));
-                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x00",4));
-                            SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x64",4));
+                            //SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6C, QByteArray("\x00\x00\x00\x23",4));
+                            //SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x00",4));
+                            //SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x64",4));
                         }
                     }
                 }

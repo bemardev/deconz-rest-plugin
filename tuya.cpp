@@ -389,7 +389,9 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     else
                     {
                         lightNode->setValue(RStateAlert, QString("lselect"));
-                    }                    
+                    }
+
+                     update = true;
                 }
             }
             else
