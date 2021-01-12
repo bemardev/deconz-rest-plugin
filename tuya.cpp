@@ -15,7 +15,7 @@ const QDateTime J2000_epoch = QDateTime(QDate(2000, 1, 1), QTime(0, 0), Qt::UTC)
 const QDateTime Unix_epoch = QDateTime(QDate(1970, 1, 1), QTime(0, 0), Qt::UTC);
 
 
-static void getTime(quint32 *time, qint32 *tz, quint32 *dstStart, quint32 *dstEnd, qint32 *dstShift, quint32 *standardTime, quint32 *localTime, int epoch)
+static void getTime(quint32 *time, qint32 *tz, quint32 *dstStart, quint32 *dstEnd, qint32 *dstShift, quint32 *standardTime, quint32 *localTime, int mode)
 {
     QDateTime now = QDateTime::currentDateTimeUtc();
     QDateTime yearStart(QDate(QDate::currentDate().year(), 1, 1), QTime(0, 0), Qt::UTC);
@@ -23,7 +23,7 @@ static void getTime(quint32 *time, qint32 *tz, quint32 *dstStart, quint32 *dstEn
     
     QDateTime epoch = J2000_epoch;
     
-    if ( epoch == 1)
+    if ( mode == 1)
     {
         epoch = Unix_epoch;
     }
@@ -305,7 +305,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             {
                 for (; length > 0; length--)
                 {
-                    if (dp >= 0x007B) && (dp <= 0x0081)
+                    if ((dp >= 0x007B) && (dp <= 0x0081))
                     {
                         stream >> minut16;
                         stream >> heatSetpoint16;
