@@ -11,12 +11,22 @@
 #include "tuya.h"
 
 //Copied from ebaauwn code in timer.cpp
-const QDateTime epoch = QDateTime(QDate(2000, 1, 1), QTime(0, 0), Qt::UTC);
-static void getTime(quint32 *time, qint32 *tz, quint32 *dstStart, quint32 *dstEnd, qint32 *dstShift, quint32 *standardTime, quint32 *localTime)
+const QDateTime J2000_epoch = QDateTime(QDate(2000, 1, 1), QTime(0, 0), Qt::UTC);
+const QDateTime Unix_epoch = QDateTime(QDate(1970, 1, 1), QTime(0, 0), Qt::UTC);
+
+
+static void getTime(quint32 *time, qint32 *tz, quint32 *dstStart, quint32 *dstEnd, qint32 *dstShift, quint32 *standardTime, quint32 *localTime, int epoch)
 {
     QDateTime now = QDateTime::currentDateTimeUtc();
     QDateTime yearStart(QDate(QDate::currentDate().year(), 1, 1), QTime(0, 0), Qt::UTC);
     QTimeZone timeZone(QTimeZone::systemTimeZoneId());
+    
+    QDateTime epoch = J2000_epoch;
+    
+    if ( epoch == 1)
+    {
+        epoch = Unix_epoch;
+    }
 
     *time = *standardTime = *localTime = epoch.secsTo(now);
     *tz = timeZone.offsetFromUtc(yearStart);
@@ -138,6 +148,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
     {
         return;
     }
+    
+    DBG_Printf(DBG_INFO, "Tuya debug 4 : Address 0x%016llX , Command 0x%02X, Payload %s\n" , ind.srcAddress().ext(), zclFrame.commandId() , qPrintable(zclFrame.payload().toHex()));
 
     if (zclFrame.commandId() == 0x00)
     {
@@ -207,7 +219,6 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
         dp_identifier = (quint8) (dp & 0xFF);
         dp_type = (quint8) ((dp >> 8) & 0xFF);
 
-        DBG_Printf(DBG_INFO, "Tuya debug 4 : Address 0x%016llX Payload %s\n" , ind.srcAddress().ext(), qPrintable(zclFrame.payload().toHex()));
         DBG_Printf(DBG_INFO, "Tuya debug 5 : Status: %d Transid: %d Dp: %d (0x%02X,0x%02X) Fn: %d Data %ld\n", status , transid , dp , dp_type, dp_identifier, fn , data);
 
         if (length > 4) //schedule command
@@ -888,9 +899,9 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
         
         quint16 payloadSize;
         
-        stream >> payloadSize; // Always 0 for device > gateway
-        //other data ore useless
-        if (payloadSize == 0)
+        stream >> payloadSize;
+
+        if (payloadSize == 0)  // Always 0 for device > gateway
         {
             
             quint32 time_now = 0xFFFFFFFF;              // id 0x0000 Time
@@ -903,9 +914,48 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             quint32 time_local_time = 0xFFFFFFFF;       // id 0x0007 LocalTime
             //quint32 time_valid_until_time = 0xFFFFFFFF; // id 0x0009 ValidUntilTime
 
-            getTime(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time);
+            getTime(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 0);
 
             QByteArray data;
+            
+            //Always 8 (size)
+            data.append(0x08);
+            
+            // Add UTC time
+            data.append((qint8)((time_now >> 24) & 0xff));
+            data.append((qint8)((time_now >> 16) & 0xff));
+            data.append((qint8)((time_now >> 8) & 0xff));
+            data.append((qint8)(time_now & 0xff));
+            // Ad local time
+            data.append((qint8)((time_local_time >> 24) & 0xff));
+            data.append((qint8)((time_local_time >> 16) & 0xff));
+            data.append((qint8)((time_local_time >> 8) & 0xff));
+            data.append((qint8)(time_local_time & 0xff));
+
+            SendTuyaCommand( ind, 0x24, data );
+
+            return;
+        }
+        else
+        {
+            quint32 time_now = 0xFFFFFFFF;              // id 0x0000 Time
+            //qint8 time_status = 0x0D;                   // id 0x0001 TimeStatus Master|MasterZoneDst|Superseding
+            qint32 time_zone = 0xFFFFFFFF;              // id 0x0002 TimeZone
+            quint32 time_dst_start = 0xFFFFFFFF;        // id 0x0003 DstStart
+            quint32 time_dst_end = 0xFFFFFFFF;          // id 0x0004 DstEnd
+            qint32 time_dst_shift = 0xFFFFFFFF;         // id 0x0005 DstShift
+            quint32 time_std_time = 0xFFFFFFFF;         // id 0x0006 StandardTime
+            quint32 time_local_time = 0xFFFFFFFF;       // id 0x0007 LocalTime
+            //quint32 time_valid_until_time = 0xFFFFFFFF; // id 0x0009 ValidUntilTime
+
+            getTime(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 1);
+
+            QByteArray data;
+            
+            //Add the "magic vlaue"
+            data.append((qint8)((payloadSize >> 8) & 0xff));
+            data.append((qint8)(payloadSize & 0xff));
+            
             // Add UTC time
             data.append((qint8)((time_now >> 24) & 0xff));
             data.append((qint8)((time_now >> 16) & 0xff));
@@ -1088,7 +1138,6 @@ bool DeRestPluginPrivate::SendTuyaCommand( const deCONZ::ApsDataIndication &ind,
     stream.setByteOrder(QDataStream::LittleEndian);
     
     // Data
-    stream << (qint16) data.length(); // length always 8
     for (int i = 0; i < data.length(); i++)
     {
         stream << (quint8) data[i];
