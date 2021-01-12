@@ -311,7 +311,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         stream >> heatSetpoint16;
                         hour = (quint8) ((minut16 / 60) & 0xff);
                         minut = (quint8) ((minut16 - 60 * hour) & 0xff);
-                        heatSetpoint = (quint8) ((heatSetpoint16 / 10) & 0xff )
+                        heatSetpoint = (quint8) ((heatSetpoint16 / 10) & 0xff );
                     }
                     else
                     {
