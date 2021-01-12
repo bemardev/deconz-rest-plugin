@@ -1944,6 +1944,8 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
 
     bool hasTuyaCluster = false;
     QString manufacturer;
+    
+    DBG_Printf(DBG_INFO, "Tuya : Aquara debug 0\n");
 
     //Make 2 fakes device for tuya switches
     if (node->nodeDescriptor().manufacturerCode() == VENDOR_EMBER && !node->simpleDescriptors().isEmpty())
@@ -2045,7 +2047,11 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
                 }
 
             }
-            else if ( (i->inClusters()[c].id() == LUMI_CLUSTER_ID) && (node->macCapabilities() & deCONZ::MacDeviceIsFFD) ) { hasServerOnOff = true; }
+            else if ( (i->inClusters()[c].id() == LUMI_CLUSTER_ID) && (node->macCapabilities() & deCONZ::MacDeviceIsFFD) )
+            {
+                DBG_Printf(DBG_INFO, "Tuya : Aquara debug 1\n");
+                hasServerOnOff = true;
+            }
         }
 
         // check if node already exist
