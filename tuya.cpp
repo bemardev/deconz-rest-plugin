@@ -22,12 +22,12 @@ static void getTime2(quint32 *time, qint32 *tz, quint32 *dstStart, quint32 *dstE
     QDateTime yearStart(QDate(QDate::currentDate().year(), 1, 1), QTime(0, 0), Qt::UTC);
     QTimeZone timeZone(QTimeZone::systemTimeZoneId());
     
-    QDateTime epoch = QDateTime(QDate(2000, 1, 1), QTime(0, 0), Qt::UTC);
+    QDateTime epoch = J2000_epoch;
     
-    //if ( mode == 1)
-    //{
-    //    epoch = Unix_epoch;
-    //}
+    if ( mode == 1)
+    {
+        epoch = Unix_epoch;
+    }
 
     *time = *standardTime = *localTime = epoch.secsTo(now);
     *tz = timeZone.offsetFromUtc(yearStart);
