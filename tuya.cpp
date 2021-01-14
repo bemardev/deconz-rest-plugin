@@ -968,8 +968,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             QByteArray data;
             
             //Add the "magic vlaue"
-            data.append((qint8)((payloadSize >> 8) & 0xff));
             data.append((qint8)(payloadSize & 0xff));
+            data.append((qint8)((payloadSize >> 8) & 0xff));
             
             // Add UTC time
             data.append((qint8)((time_now >> 24) & 0xff));
@@ -1145,7 +1145,8 @@ bool DeRestPluginPrivate::SendTuyaCommand( const deCONZ::ApsDataIndication &ind,
     task.zclFrame.setSequenceNumber(zclSeq++);
     task.zclFrame.setCommandId(command); // Command
     task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand |
-                             deCONZ::ZclFCDirectionServerToClient |
+                             //deCONZ::ZclFCDirectionServerToClient |
+                             deCONZ::ZclFCDirectionClientToServer |
                              deCONZ::ZclFCDisableDefaultResponse);
 
     // payload
