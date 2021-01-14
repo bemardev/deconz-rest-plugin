@@ -1502,6 +1502,7 @@ public:
     void sendIasZoneEnrollResponse(const deCONZ::ApsDataIndication &ind, deCONZ::ZclFrame &zclFrame);
     void handleIndicationSearchSensors(const deCONZ::ApsDataIndication &ind, deCONZ::ZclFrame &zclFrame);
     bool SendTuyaRequest(TaskItem &task, TaskType taskType , qint8 Dp_type, qint8 Dp_identifier , QByteArray data );
+    bool SendTuyaRequest2(TaskItem &task, TaskType taskType , qint8 Dp_type, qint8 Dp_identifier , QByteArray data , qint8 Dp_type2, qint8 Dp_identifier2 , QByteArray data2 );
     void handleCommissioningClusterIndication(const deCONZ::ApsDataIndication &ind, deCONZ::ZclFrame &zclFrame);
     bool SendTuyaRequestThermostatSetWeeklySchedule(TaskItem &taskRef, quint8 weekdays , QString transitions , qint8 Dp_identifier);
     void handleZdpIndication(const deCONZ::ApsDataIndication &ind);

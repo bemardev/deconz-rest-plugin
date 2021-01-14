@@ -792,6 +792,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         }
                     }
                     break;
+                    case 0x0174 : // auto lock mode on/off
+                    break;
                     case 0x0202: // Thermostat heatsetpoint
                     {
                         qint16 temp = (static_cast<qint16>(data & 0xFFFF)) * 10;
@@ -1116,7 +1118,7 @@ bool DeRestPluginPrivate::SendTuyaRequestThermostatSetWeeklySchedule(TaskItem &t
 bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType , qint8 Dp_type, qint8 Dp_identifier , QByteArray data )
 {
 
-    DBG_Printf(DBG_INFO, "Send Tuya Request: Dp_type: 0x%02X Dp_ identifier 0x%02X Data: %s\n", Dp_type, Dp_identifier , qPrintable(data.toHex()));
+    DBG_Printf(DBG_INFO, "Send Tuya Request: Dp_type: 0x%02X Dp_ identifier 0x%02X Data(%d): %s\n", Dp_type, Dp_identifier , data.length() , qPrintable(data.toHex()));
 
     TaskItem task;
     copyTaskReq(taskRef, task);
@@ -1173,3 +1175,78 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
 
     return true;
 }
+
+bool DeRestPluginPrivate::SendTuyaRequest2(TaskItem &taskRef, TaskType taskType , qint8 Dp_type, qint8 Dp_identifier , QByteArray data , qint8 Dp_type2, qint8 Dp_identifier2 , QByteArray data2)
+{
+
+    DBG_Printf(DBG_INFO, "Send Tuya Request 2: Dp_type: 0x%02X Dp_ identifier 0x%02X Data(%d): %s\n", Dp_type, Dp_identifier , data.length() , qPrintable(data.toHex()));
+
+    TaskItem task;
+    copyTaskReq(taskRef, task);
+
+    //Tuya task
+    task.taskType = taskType;
+
+    task.req.setClusterId(TUYA_CLUSTER_ID);
+    task.req.setProfileId(HA_PROFILE_ID);
+
+    task.zclFrame.payload().clear();
+    task.zclFrame.setSequenceNumber(zclSeq++);
+    task.zclFrame.setCommandId(0x00); // Command 0x00
+    task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand | deCONZ::ZclFCDirectionClientToServer);
+
+    // payload
+    QDataStream stream(&task.zclFrame.payload(), QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+
+    //Status always 0x00
+    stream << (qint8) 0x00;
+    //TransID , use 0
+    stream << (qint8) 0x00;
+    //Dp_indentifier
+    stream << (qint8) Dp_identifier;
+    //Dp_type
+    stream << (qint8) Dp_type;
+    //Fn , always 0
+    stream << (qint8) 0x00;
+    // Data
+    stream << (qint8) data.length(); // length (can be 0 for Dp_identifier = enums)
+    for (int i = 0; i < data.length(); i++)
+    {
+        stream << (quint8) data[i];
+    }
+    
+    //Dp_indentifier
+    stream << (qint8) Dp_identifier2;
+    //Dp_type
+    stream << (qint8) Dp_type2;
+    //Fn , always 0
+    stream << (qint8) 0x00;
+    // Data
+    stream << (qint8) data2.length(); // length (can be 0 for Dp_identifier = enums)
+    for (int i = 0; i < data2.length(); i++)
+    {
+        stream << (quint8) data2[i];
+    }
+
+    { // ZCL frame
+        task.req.asdu().clear(); // cleanup old request data if there is any
+        QDataStream stream(&task.req.asdu(), QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        task.zclFrame.writeToStream(stream);
+    }
+
+    if (addTask(task))
+    {
+        taskToLocalData(task);
+    }
+    else
+    {
+        return false;
+    }
+
+    processTasks();
+
+    return true;
+}
+
