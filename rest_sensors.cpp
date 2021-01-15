@@ -1003,7 +1003,7 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     QByteArray data;
                     data.append(static_cast<qint8>(melody & 0xff));
                     
-                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x66, data))
+                    if (SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_ENUM, 0x66, data))
                     {
                         updated = true;
                     }
@@ -1018,7 +1018,7 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     QByteArray data;
                     data.append(static_cast<qint8>(volume & 0xff));
                     
-                    if (SendTuyaRequest(task, TaskThermostat , DP_TYPE_ENUM, 0x74, data))
+                    if (SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_ENUM, 0x74, data))
                     {
                         updated = true;
                     }
@@ -1029,23 +1029,23 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     QString presetSet = map[pi.key()].toString();
                     if (presetSet == "both")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
                     }
                     else if (presetSet == "humidity")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
                     }
                     else if (presetSet == "temperature")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
                     }
                     else if (presetSet == "off")
                     {
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
-                        SendTuyaRequest(task, TaskThermostat , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
+                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
                     }
                     else
                     {
@@ -1064,10 +1064,10 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         //if ((setting.size() == 4) && (setting[0].type() == QVariant::Double) && (setting[1].type() == QVariant::Double) && (setting[2].type() == QVariant::Double) && && (setting[3].type() == QVariant::Double))
                         {
                             //data.append(static_cast<qint8>(setting[1].toUInt()));
-                            SendTuyaRequest2(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x58",4),DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x0c",4) );
-                            //SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6C, QByteArray("\x00\x00\x00\x23",4));
-                            //SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x00",4));
-                            //SendTuyaRequest(task, TaskThermostat , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x64",4));
+                            SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x58",4),DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x0c",4) );
+                            //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6C, QByteArray("\x00\x00\x00\x23",4));
+                            //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x00",4));
+                            //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x64",4));
                         }
                     }
                 }

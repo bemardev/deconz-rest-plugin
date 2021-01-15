@@ -301,14 +301,6 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
         {
             switch (dp)
             {
-                //alarm sensor
-                case 0x0171 :
-                case 0x0172 :
-                case 0x0466 :
-                {
-                    sensorNode = getSensorNodeForAddressAndEndpoint(ind.srcAddress(), ind.srcEndpoint(), QLatin1String("ZHAAlarm"));
-                }
-                break;
                 //temperature
                 case 0x0269:
                 {
@@ -322,6 +314,10 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                 }
                 break;
                 default:
+                // All other are for the alarm sensor
+                {
+                    sensorNode = getSensorNodeForAddressAndEndpoint(ind.srcAddress(), ind.srcEndpoint(), QLatin1String("ZHAAlarm"));
+                }
                 break;
             }
         }
@@ -1193,7 +1189,7 @@ bool DeRestPluginPrivate::SendTuyaRequest2(TaskItem &taskRef, TaskType taskType 
     task.zclFrame.payload().clear();
     task.zclFrame.setSequenceNumber(zclSeq++);
     task.zclFrame.setCommandId(0x00); // Command 0x00
-    task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand | deCONZ::ZclFCDirectionClientToServer);
+    task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand | deCONZ::ZclFCDirectionClientToServer | deCONZ::ZclFCDisableDefaultResponse);
 
     // payload
     QDataStream stream(&task.zclFrame.payload(), QIODevice::WriteOnly);
@@ -1228,6 +1224,10 @@ bool DeRestPluginPrivate::SendTuyaRequest2(TaskItem &taskRef, TaskType taskType 
     {
         stream << (quint8) data2[i];
     }
+    
+    //print all the stream
+    // 00 23 6c02 00 04 00000021 6b02 00 04 00000012
+    //DBG_Printf(DBG_INFO, "Tuya debug output :");
 
     { // ZCL frame
         task.req.asdu().clear(); // cleanup old request data if there is any
