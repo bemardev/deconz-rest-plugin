@@ -785,6 +785,10 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         rsp.list.append(errorToMap(ERR_INTERNAL_ERROR, QString("/sensors/%1").arg(id), QString("Internal error, %1").arg(ERR_BRIDGE_BUSY)));
                     }
                 }
+                //don't update value for those setting, let them be filled by the return from device
+                else if ( (rid.suffix == RConfigTempThreshold) or (rid.suffix == RConfigHumiThreshold))
+                {
+                }
                 else if (item->setValue(val))
                 {
                     // TODO: Fix bug
@@ -1055,19 +1059,37 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                         return REQ_READY_SEND;
                     }
                 }
-                else if (rid.suffix == RConfigThreshold)
+                else if (rid.suffix == RConfigTempThreshold)
                 {
-                    //if (map[pi.key()].type() == QVariant::List)
+                    if (map[pi.key()].type() == QVariant::List)
                     {
-                        //QVariantList setting = map[pi.key()].toList();
+                        QVariantList setting = map[pi.key()].toList();
                         
-                        //if ((setting.size() == 4) && (setting[0].type() == QVariant::Double) && (setting[1].type() == QVariant::Double) && (setting[2].type() == QVariant::Double) && && (setting[3].type() == QVariant::Double))
+                        if ( (setting.size() == 2) && (setting[0].type() == QVariant::Double) && (setting[1].type() == QVariant::Double) )
                         {
-                            //data.append(static_cast<qint8>(setting[1].toUInt()));
-                            SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x58",4),DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x0c",4) );
-                            //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6C, QByteArray("\x00\x00\x00\x23",4));
-                            //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, QByteArray("\x00\x00\x00\x00",4));
-                            //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6E, QByteArray("\x00\x00\x00\x64",4));
+                            QByteArray datamin = QByteArray("\x00\x00\x00",3);
+                            QByteArray datamax = QByteArray("\x00\x00\x00",3);
+                            datamin.append(static_cast<qint8>(setting[0].toUInt()));
+                            datamax.append(static_cast<qint8>(setting[1].toUInt()));
+                            
+                            SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6B, datamin ,DP_TYPE_VALUE, 0x6C, datamax );
+                        }
+                    }
+                }
+                else if (rid.suffix == RConfigHumiThreshold)
+                {
+                    if (map[pi.key()].type() == QVariant::List)
+                    {
+                        QVariantList setting = map[pi.key()].toList();
+                        
+                        if ( (setting.size() == 2) && (setting[0].type() == QVariant::Double) && (setting[1].type() == QVariant::Double) )
+                        {
+                            QByteArray datamin = QByteArray("\x00\x00\x00",3);
+                            QByteArray datamax = QByteArray("\x00\x00\x00",3);
+                            datamin.append(static_cast<qint8>(setting[0].toUInt()));
+                            datamax.append(static_cast<qint8>(setting[1].toUInt()));
+                            
+                            SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, datamin ,DP_TYPE_VALUE, 0x6E, datamax );
                         }
                     }
                 }

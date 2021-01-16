@@ -574,11 +574,9 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     break;
                     case 0x026B : // min alarm temperature threshold
                     case 0x026C : // max alarm temperature threshold
-                    case 0x026D : // min alarm humidity threshold
-                    case 0x026E : // max alarm humidity threshold
                     {
                         qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
-                        ResourceItem *item = sensorNode->item(RConfigThreshold);
+                        ResourceItem *item = sensorNode->item(RConfigTempThreshold);
 
                         if (item)
                         {
@@ -586,7 +584,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             
                             if (item->toString().isEmpty())
                             {
-                                values = QString("0,0,0,0");
+                                values = QString("0,0");
                             }
                             else
                             {
@@ -594,19 +592,52 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             }
                             
                             QStringList valuesList = values.split(",");
-                            if (valuesList.size() != 4)
+                            if (valuesList.size() != 2)
                             {
                                 valuesList = QStringList();
-                                valuesList << "0" << "0" << "0" << "0";
+                                valuesList << "0" << "0" ;
                             }
                             
                             if (dp == 0x026B) { valuesList[0] == QString::number(min); }
                             if (dp == 0x026C) { valuesList[1] == QString::number(min); }
-                            if (dp == 0x026D) { valuesList[2] == QString::number(min); }
-                            if (dp == 0x026E) { valuesList[3] == QString::number(min); }
                             
                             item->setValue(valuesList.join(','));
-                            Event e(RSensors, RConfigThreshold, sensorNode->id(), item);
+                            Event e(RSensors, RConfigTempThreshold, sensorNode->id(), item);
+                            enqueueEvent(e);
+                        }
+                    }
+                    break;
+                    case 0x026D : // min alarm humidity threshold
+                    case 0x026E : // max alarm humidity threshold
+                    {
+                        qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
+                        ResourceItem *item = sensorNode->item(RConfigHumiThreshold);
+
+                        if (item)
+                        {
+                            QString values;
+                            
+                            if (item->toString().isEmpty())
+                            {
+                                values = QString("0,0");
+                            }
+                            else
+                            {
+                                values = item->toString();
+                            }
+                            
+                            QStringList valuesList = values.split(",");
+                            if (valuesList.size() != 2)
+                            {
+                                valuesList = QStringList();
+                                valuesList << "0" << "0";
+                            }
+                            
+                            if (dp == 0x026D) { valuesList[0] == QString::number(min); }
+                            if (dp == 0x026E) { valuesList[1] == QString::number(min); }
+                            
+                            item->setValue(valuesList.join(','));
+                            Event e(RSensors, RConfigHumiThreshold, sensorNode->id(), item);
                             enqueueEvent(e);
                         }
                     }
