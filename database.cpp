@@ -3357,7 +3357,8 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
                 sensor.addItem(DataTypeUInt8, RConfigMelody);
                 sensor.addItem(DataTypeString, RConfigPreset);
                 sensor.addItem(DataTypeUInt8, RConfigVolume);
-                sensor.addItem(DataTypeString, RConfigThreshold);
+                sensor.addItem(DataTypeString, RConfigTempThreshold);
+                sensor.addItem(DataTypeString, RConfigHumiThreshold);
             }
         }
         else if (sensor.type().endsWith(QLatin1String("CarbonMonoxide")))
