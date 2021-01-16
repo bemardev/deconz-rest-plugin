@@ -1073,6 +1073,10 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                             datamax.append(static_cast<qint8>(setting[1].toUInt()));
                             
                             SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6B, datamin ,DP_TYPE_VALUE, 0x6C, datamax );
+                            
+                            rspItemState[QString("successfully updated")] = map[pi.key()].toString();
+                            rspItem["success"] = rspItemState;
+                            
                         }
                     }
                 }
@@ -1090,6 +1094,9 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                             datamax.append(static_cast<qint8>(setting[1].toUInt()));
                             
                             SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, datamin ,DP_TYPE_VALUE, 0x6E, datamax );
+                            
+                            rspItemState[QString("successfully updated")] = map[pi.key()].toString();
+                            rspItem["success"] = rspItemState;
                         }
                     }
                 }

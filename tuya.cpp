@@ -575,7 +575,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     case 0x026B : // min alarm temperature threshold
                     case 0x026C : // max alarm temperature threshold
                     {
-                        qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
+                        qint8 min = (static_cast<qint8>(data & 0xFF));
                         ResourceItem *item = sensorNode->item(RConfigTempThreshold);
 
                         if (item)
@@ -598,8 +598,13 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                                 valuesList << "0" << "0" ;
                             }
                             
+                            DBG_Printf(DBG_INFO, "Tuya debug 32 : %d\n", min);
+                            DBG_Printf(DBG_INFO, "Tuya debug 33 : %s\n", valuesList.join(','));
+                            
                             if (dp == 0x026B) { valuesList[0] == QString::number(min); }
                             if (dp == 0x026C) { valuesList[1] == QString::number(min); }
+                            
+                            DBG_Printf(DBG_INFO, "Tuya debug 34 : %s\n", valuesList.join(','));
                             
                             item->setValue(valuesList.join(','));
                             Event e(RSensors, RConfigTempThreshold, sensorNode->id(), item);
@@ -610,7 +615,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                     case 0x026D : // min alarm humidity threshold
                     case 0x026E : // max alarm humidity threshold
                     {
-                        qint16 min = (static_cast<qint16>(data & 0xFFFF)) * 100;
+                        qint8 min = (static_cast<qint8>(data & 0xFF));
                         ResourceItem *item = sensorNode->item(RConfigHumiThreshold);
 
                         if (item)
