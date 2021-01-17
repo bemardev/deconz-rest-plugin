@@ -601,8 +601,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             DBG_Printf(DBG_INFO, "Tuya debug 32 : %d\n", min);
                             DBG_Printf(DBG_INFO, "Tuya debug 33 : %s\n", valuesList.join(','));
                             
-                            if (dp == 0x026B) { valuesList[0] == QString::number(min); }
-                            if (dp == 0x026C) { valuesList[1] == QString::number(min); }
+                            if (dp == 0x026B) { valuesList[0] = QString::number(min); }
+                            if (dp == 0x026C) { valuesList[1] = QString::number(min); }
                             
                             DBG_Printf(DBG_INFO, "Tuya debug 34 : %s\n", valuesList.join(','));
                             
@@ -638,8 +638,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                                 valuesList << "0" << "0";
                             }
                             
-                            if (dp == 0x026D) { valuesList[0] == QString::number(min); }
-                            if (dp == 0x026E) { valuesList[1] == QString::number(min); }
+                            if (dp == 0x026D) { valuesList[0] = QString::number(min); }
+                            if (dp == 0x026E) { valuesList[1] = QString::number(min); }
                             
                             item->setValue(valuesList.join(','));
                             Event e(RSensors, RConfigHumiThreshold, sensorNode->id(), item);
