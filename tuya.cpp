@@ -929,7 +929,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
             quint32 time_local_time = 0xFFFFFFFF;       // id 0x0007 LocalTime
             //quint32 time_valid_until_time = 0xFFFFFFFF; // id 0x0009 ValidUntilTime
 
-            getTime2(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 0);
+            getTime2(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 1);
 
             QByteArray data;
             
