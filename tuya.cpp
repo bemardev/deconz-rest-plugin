@@ -597,18 +597,19 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                                 valuesList = QStringList();
                                 valuesList << "0" << "0" ;
                             }
-                            
-                            DBG_Printf(DBG_INFO, "Tuya debug 32 : %d\n", min);
-                            DBG_Printf(DBG_INFO, "Tuya debug 33 : %s\n", valuesList.join(','));
+
+                            DBG_Printf(DBG_INFO, "Tuya debug 33 : %s\n", qPrintable(valuesList.join(',')));
                             
                             if (dp == 0x026B) { valuesList[0] = QString::number(min); }
                             if (dp == 0x026C) { valuesList[1] = QString::number(min); }
                             
-                            DBG_Printf(DBG_INFO, "Tuya debug 34 : %s\n", valuesList.join(','));
+                            DBG_Printf(DBG_INFO, "Tuya debug 34 : %s\n", qPrintable(valuesList.join(',')));
                             
                             item->setValue(valuesList.join(','));
                             Event e(RSensors, RConfigTempThreshold, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -644,6 +645,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(valuesList.join(','));
                             Event e(RSensors, RConfigHumiThreshold, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -657,7 +660,9 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(melody);
                             enqueueEvent(Event(RSensors, RConfigMelody, sensorNode->id(), item));
+                            update = true;
                         }
+                        
                     }
                     break;
                     case 0x0474 : // volume
@@ -670,6 +675,7 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(volume);
                             enqueueEvent(Event(RSensors, RConfigVolume, sensorNode->id(), item));
+                            update = true;
                         }
                     }
                     break;
@@ -708,7 +714,10 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(mode);
                             enqueueEvent(Event(RSensors, RConfigMode, sensorNode->id(), item));
+                            
+                            update = true;
                         }
+                        
                     }
                     break;
                     case 0x0107 : // Childlock status
@@ -721,6 +730,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(locked);
                             Event e(RSensors, RConfigLocked, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -734,6 +745,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(winopen);
                             Event e(RSensors, RConfigWindowOpen, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -749,6 +762,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(onoff);
                             Event e(RSensors, RConfigSetValve, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -762,6 +777,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(locked);
                             Event e(RSensors, RConfigLocked, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -781,6 +798,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(mode);
                             enqueueEvent(Event(RSensors, RConfigMode, sensorNode->id(), item));
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -806,6 +825,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(mode);
                             enqueueEvent(Event(RSensors, RConfigMode, sensorNode->id(), item));
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -821,6 +842,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(bat);
                             Event e(RSensors, RStateLowBattery, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -836,6 +859,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(temp);
                             Event e(RSensors, RConfigHeatSetpoint, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
 
                         }
                     }
@@ -850,6 +875,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(temp);
                             Event e(RSensors, RStateTemperature, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
 
                         }
                     }
@@ -864,6 +891,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(temp);
                             Event e(RSensors, RConfigHeatSetpoint, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -883,6 +912,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(bat);
                             Event e(RSensors, RConfigBattery, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -896,6 +927,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(temp);
                             Event e(RSensors, RStateTemperature, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -909,6 +942,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(temp);
                             Event e(RSensors, RConfigOffset, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -925,6 +960,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                                 item->setValue(temp);
                                 Event e(RSensors, RStateTemperature, sensorNode->id(), item);
                                 enqueueEvent(e);
+                                
+                                update = true;
 
                             }
                         }
@@ -943,6 +980,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                                 item->setValue(temp);
                                 Event e(RSensors, RConfigHeatSetpoint, sensorNode->id(), item);
                                 enqueueEvent(e);
+                                
+                                update = true;
 
                             }
                         }
@@ -971,6 +1010,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(valve);
                             enqueueEvent(Event(RSensors, RStateValve, sensorNode->id(), item));
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -991,6 +1032,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(preset);
                             enqueueEvent(Event(RSensors, RConfigPreset, sensorNode->id(), item));
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -1015,6 +1058,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(preset);
                             enqueueEvent(Event(RSensors, RConfigPreset, sensorNode->id(), item));
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -1035,6 +1080,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                         {
                             item->setValue(mode);
                             enqueueEvent(Event(RSensors, RConfigMode, sensorNode->id(), item));
+                            
+                            update = true;
                         }
                     }
                     break;
@@ -1050,6 +1097,8 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
                             item->setValue(bat);
                             Event e(RSensors, RStateLowBattery, sensorNode->id(), item);
                             enqueueEvent(e);
+                            
+                            update = true;
                         }
                     }
                     break;
