@@ -1033,23 +1033,27 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                     QString presetSet = map[pi.key()].toString();
                     if (presetSet == "both")
                     {
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                        SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1) ,DP_TYPE_BOOL, 0x72, QByteArray("\x01",1) );
                     }
                     else if (presetSet == "humidity")
                     {
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",0));
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",1));
+                        SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1) ,DP_TYPE_BOOL, 0x72, QByteArray("\x01",1) );
                     }
                     else if (presetSet == "temperature")
                     {
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x01",0));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
+                        SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x01",1) ,DP_TYPE_BOOL, 0x72, QByteArray("\x00",1) );
                     }
                     else if (presetSet == "off")
                     {
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
-                        SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1));
+                        //SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x72, QByteArray("\x00",1));
+                        SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_BOOL, 0x71, QByteArray("\x00",1) ,DP_TYPE_BOOL, 0x72, QByteArray("\x00",1) );
                     }
                     else
                     {
