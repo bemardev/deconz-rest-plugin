@@ -912,80 +912,49 @@ void DeRestPluginPrivate::handleTuyaClusterIndication(const deCONZ::ApsDataIndic
         QDataStream stream(zclFrame.payload());
         stream.setByteOrder(QDataStream::LittleEndian);
         
-        quint16 payloadSize;
+        quint16 UnknowHeader;
         
-        stream >> payloadSize;
+        stream >> UnknowHeader;
 
-        if (payloadSize == 0)  // Always 0 for device > gateway
-        {
-            
-            quint32 time_now = 0xFFFFFFFF;              // id 0x0000 Time
-            //qint8 time_status = 0x0D;                   // id 0x0001 TimeStatus Master|MasterZoneDst|Superseding
-            qint32 time_zone = 0xFFFFFFFF;              // id 0x0002 TimeZone
-            quint32 time_dst_start = 0xFFFFFFFF;        // id 0x0003 DstStart
-            quint32 time_dst_end = 0xFFFFFFFF;          // id 0x0004 DstEnd
-            qint32 time_dst_shift = 0xFFFFFFFF;         // id 0x0005 DstShift
-            quint32 time_std_time = 0xFFFFFFFF;         // id 0x0006 StandardTime
-            quint32 time_local_time = 0xFFFFFFFF;       // id 0x0007 LocalTime
-            //quint32 time_valid_until_time = 0xFFFFFFFF; // id 0x0009 ValidUntilTime
+        // This is disabled for the moment, need investigations
+        // It seem some device send a UnknowHeader = 0x0000
+        // it s always 0x0000 for device > gateway
+        // And always 0x0008 for gateway > device (0x0008 is the payload size)
+        //
+        //if (UnknowHeader == 0x0000)
+        //{
+        //}
 
-            getTime2(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 1);
+        quint32 time_now = 0xFFFFFFFF;              // id 0x0000 Time
+        qint32 time_zone = 0xFFFFFFFF;              // id 0x0002 TimeZone
+        quint32 time_dst_start = 0xFFFFFFFF;        // id 0x0003 DstStart
+        quint32 time_dst_end = 0xFFFFFFFF;          // id 0x0004 DstEnd
+        qint32 time_dst_shift = 0xFFFFFFFF;         // id 0x0005 DstShift
+        quint32 time_std_time = 0xFFFFFFFF;         // id 0x0006 StandardTime
+        quint32 time_local_time = 0xFFFFFFFF;       // id 0x0007 LocalTime
 
-            QByteArray data;
-            
-            //Always 8 (size)
-            data.append(0x08);
-            
-            // Add UTC time
-            data.append((qint8)((time_now >> 24) & 0xff));
-            data.append((qint8)((time_now >> 16) & 0xff));
-            data.append((qint8)((time_now >> 8) & 0xff));
-            data.append((qint8)(time_now & 0xff));
-            // Ad local time
-            data.append((qint8)((time_local_time >> 24) & 0xff));
-            data.append((qint8)((time_local_time >> 16) & 0xff));
-            data.append((qint8)((time_local_time >> 8) & 0xff));
-            data.append((qint8)(time_local_time & 0xff));
+        getTime2(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 1);
 
-            SendTuyaCommand( ind, 0x24, data );
+        QByteArray data;
+        
+        //Add the "magic vlaue"
+        data.append((qint8)(UnknowHeader & 0xff));
+        data.append((qint8)((UnknowHeader >> 8) & 0xff));
+        
+        // Add UTC time
+        data.append((qint8)((time_now >> 24) & 0xff));
+        data.append((qint8)((time_now >> 16) & 0xff));
+        data.append((qint8)((time_now >> 8) & 0xff));
+        data.append((qint8)(time_now & 0xff));
+        // Ad local time
+        data.append((qint8)((time_local_time >> 24) & 0xff));
+        data.append((qint8)((time_local_time >> 16) & 0xff));
+        data.append((qint8)((time_local_time >> 8) & 0xff));
+        data.append((qint8)(time_local_time & 0xff));
 
-            return;
-        }
-        else
-        {
-            quint32 time_now = 0xFFFFFFFF;              // id 0x0000 Time
-            //qint8 time_status = 0x0D;                   // id 0x0001 TimeStatus Master|MasterZoneDst|Superseding
-            qint32 time_zone = 0xFFFFFFFF;              // id 0x0002 TimeZone
-            quint32 time_dst_start = 0xFFFFFFFF;        // id 0x0003 DstStart
-            quint32 time_dst_end = 0xFFFFFFFF;          // id 0x0004 DstEnd
-            qint32 time_dst_shift = 0xFFFFFFFF;         // id 0x0005 DstShift
-            quint32 time_std_time = 0xFFFFFFFF;         // id 0x0006 StandardTime
-            quint32 time_local_time = 0xFFFFFFFF;       // id 0x0007 LocalTime
-            //quint32 time_valid_until_time = 0xFFFFFFFF; // id 0x0009 ValidUntilTime
+        SendTuyaCommand( ind, 0x24, data );
 
-            getTime2(&time_now, &time_zone, &time_dst_start, &time_dst_end, &time_dst_shift, &time_std_time, &time_local_time, 1);
-
-            QByteArray data;
-            
-            //Add the "magic vlaue"
-            data.append((qint8)(payloadSize & 0xff));
-            data.append((qint8)((payloadSize >> 8) & 0xff));
-            
-            // Add UTC time
-            data.append((qint8)((time_now >> 24) & 0xff));
-            data.append((qint8)((time_now >> 16) & 0xff));
-            data.append((qint8)((time_now >> 8) & 0xff));
-            data.append((qint8)(time_now & 0xff));
-            // Ad local time
-            data.append((qint8)((time_local_time >> 24) & 0xff));
-            data.append((qint8)((time_local_time >> 16) & 0xff));
-            data.append((qint8)((time_local_time >> 8) & 0xff));
-            data.append((qint8)(time_local_time & 0xff));
-
-            SendTuyaCommand( ind, 0x24, data );
-
-            return;
-        }
+        return;
     }
     else
     {
