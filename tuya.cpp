@@ -1249,6 +1249,8 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
     }
 
     processTasks();
+    
+    return true;
 }
 
 bool DeRestPluginPrivate::SendTuyaRequest2(TaskItem &taskRef, TaskType taskType , qint8 Dp_type, qint8 Dp_identifier , QByteArray data , qint8 Dp_type2, qint8 Dp_identifier2 , QByteArray data2)
