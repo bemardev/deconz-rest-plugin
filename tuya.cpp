@@ -1200,6 +1200,8 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
 {
 
     DBG_Printf(DBG_INFO, "Send Tuya Request: Dp_type: 0x%02X Dp_ identifier 0x%02X Data(%d): %s\n", Dp_type, Dp_identifier , data.length() , qPrintable(data.toHex()));
+    
+    const quint8 seq = zclSeq++;
 
     TaskItem task;
     copyTaskReq(taskRef, task);
@@ -1211,7 +1213,7 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
     task.req.setProfileId(HA_PROFILE_ID);
 
     task.zclFrame.payload().clear();
-    task.zclFrame.setSequenceNumber(zclSeq++);
+    task.zclFrame.setSequenceNumber(seq);
     task.zclFrame.setCommandId(0x00); // Command 0x00
     task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand | deCONZ::ZclFCDirectionClientToServer | deCONZ::ZclFCDisableDefaultResponse);
 
@@ -1221,8 +1223,8 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
 
     //Status always 0x00
     stream << (qint8) 0x00;
-    //TransID , use 0
-    stream << (qint8) 0x00;
+    //TransID , use zclSeq
+    stream << (qint8) seq;
     //Dp_indentifier
     stream << (qint8) Dp_identifier;
     //Dp_type
