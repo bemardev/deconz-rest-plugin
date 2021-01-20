@@ -12719,6 +12719,7 @@ bool DeRestPluginPrivate::addTask(const TaskItem &task)
         (task.taskType != TaskReadAttributes) &&
         (task.taskType != TaskWriteAttribute) &&
         (task.taskType != TaskViewScene) &&
+        (task.taskType != TaskTuyaRequest) &&
         (task.taskType != TaskAddScene))
     {
         for (; i != end; ++i)

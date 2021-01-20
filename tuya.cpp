@@ -1213,7 +1213,7 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
     task.zclFrame.payload().clear();
     task.zclFrame.setSequenceNumber(zclSeq++);
     task.zclFrame.setCommandId(0x00); // Command 0x00
-    task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand | deCONZ::ZclFCDirectionClientToServer);
+    task.zclFrame.setFrameControl(deCONZ::ZclFCClusterCommand | deCONZ::ZclFCDirectionClientToServer | deCONZ::ZclFCDisableDefaultResponse);
 
     // payload
     QDataStream stream(&task.zclFrame.payload(), QIODevice::WriteOnly);
@@ -1243,18 +1243,12 @@ bool DeRestPluginPrivate::SendTuyaRequest(TaskItem &taskRef, TaskType taskType ,
         task.zclFrame.writeToStream(stream);
     }
 
-    if (addTask(task))
-    {
-        taskToLocalData(task);
-    }
-    else
+    if (!addTask(task))
     {
         return false;
     }
 
     processTasks();
-
-    return true;
 }
 
 bool DeRestPluginPrivate::SendTuyaRequest2(TaskItem &taskRef, TaskType taskType , qint8 Dp_type, qint8 Dp_identifier , QByteArray data , qint8 Dp_type2, qint8 Dp_identifier2 , QByteArray data2)
@@ -1323,11 +1317,7 @@ bool DeRestPluginPrivate::SendTuyaRequest2(TaskItem &taskRef, TaskType taskType 
         task.zclFrame.writeToStream(stream);
     }
 
-    if (addTask(task))
-    {
-        taskToLocalData(task);
-    }
-    else
+    if (!addTask(task))
     {
         return false;
     }
