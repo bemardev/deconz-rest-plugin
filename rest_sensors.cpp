@@ -1099,7 +1099,9 @@ int DeRestPluginPrivate::changeSensorConfig(const ApiRequest &req, ApiResponse &
                             datamin.append(static_cast<qint8>(setting[0].toUInt()));
                             datamax.append(static_cast<qint8>(setting[1].toUInt()));
                             
-                            SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, datamin ,DP_TYPE_VALUE, 0x6E, datamax );
+                            //SendTuyaRequest2(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, datamin ,DP_TYPE_VALUE, 0x6E, datamax );
+                            SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6D, datamin);
+                            SendTuyaRequest(task, TaskTuyaRequest , DP_TYPE_VALUE, 0x6E, datamax);
                             
                             rspItemState[QString("successfully updated")] = map[pi.key()].toString();
                             rspItem["success"] = rspItemState;
