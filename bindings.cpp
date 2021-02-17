@@ -1915,6 +1915,10 @@ bool DeRestPluginPrivate::sendConfigureReportingRequest(BindingTask &bt)
             rq.maxInterval = 1800;
             rq.reportableChange8bit = 1;
         }
+        else if (sensor && (sensor->modelId() == QLatin1String("Gear")))
+        {
+            //Disabled for this device, it s a covering, better to use covering cluster.
+        }
         else // default configuration
         {
             rq.minInterval = 1;
