@@ -1948,6 +1948,8 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
     {
         return;
     }
+    DBG_Printf(DBG_INFO, "COV debug 1\n");
+    
     if (node->nodeDescriptor().manufacturerCode() == VENDOR_KEEN_HOME || // Keen Home Vent
         node->nodeDescriptor().manufacturerCode() == VENDOR_JENNIC || // Xiaomi lumi.ctrl_neutral1, lumi.ctrl_neutral2
         node->nodeDescriptor().manufacturerCode() == VENDOR_XIAOMI || // Xiaomi lumi.curtain.hagl04
@@ -1974,6 +1976,8 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
 
     bool hasTuyaCluster = false;
     QString manufacturer;
+    
+    DBG_Printf(DBG_INFO, "COV debug 2\n");
 
     //Make 2 fakes device for tuya switches
     if (node->nodeDescriptor().manufacturerCode() == VENDOR_EMBER && !node->simpleDescriptors().isEmpty())
@@ -2038,7 +2042,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             }
         }
     }
-
+    DBG_Printf(DBG_INFO, "COV debug 3\n");
     QList<deCONZ::SimpleDescriptor>::const_iterator i = node->simpleDescriptors().constBegin();
     QList<deCONZ::SimpleDescriptor>::const_iterator end = node->simpleDescriptors().constEnd();
 
@@ -2077,6 +2081,8 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             }
         }
 
+        DBG_Printf(DBG_INFO, "COV debug 5\n");
+        
         // check if node already exist
         LightNode *lightNode2 = nullptr;
 
@@ -2100,6 +2106,8 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             lightNode2 = &l;
             break;
         }
+        
+        DBG_Printf(DBG_INFO, "COV debug 6\n");
 
         if (lightNode2)
         {
@@ -2174,6 +2182,8 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
         lightNode.setNode(const_cast<deCONZ::Node*>(node));
         lightNode.address() = node->address();
         lightNode.setManufacturerCode(node->nodeDescriptor().manufacturerCode());
+        
+        DBG_Printf(DBG_INFO, "COV debug 7\n");
 
         // For Tuya, we realy need manufacture Name, but can't use it to compare because of fonction setManufacturerCode() that put "Heiman",
         if (node->nodeDescriptor().isNull() || node->simpleDescriptors().empty())
