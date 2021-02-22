@@ -363,6 +363,8 @@ void LightNode::setHaEndpoint(const deCONZ::SimpleDescriptor &endpoint)
     bool isWindowCovering = false;
     bool isInitialized = m_haEndpoint.isValid();
     m_haEndpoint = endpoint;
+    
+    DBG_Printf(DBG_INFO, "COV debug 5\n");
 
     // check if std otau cluster present in endpoint
     if (otauClusterId() == 0)

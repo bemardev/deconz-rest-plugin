@@ -1948,7 +1948,6 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
     {
         return;
     }
-    DBG_Printf(DBG_INFO, "COV debug 1\n");
     
     if (node->nodeDescriptor().manufacturerCode() == VENDOR_KEEN_HOME || // Keen Home Vent
         node->nodeDescriptor().manufacturerCode() == VENDOR_JENNIC || // Xiaomi lumi.ctrl_neutral1, lumi.ctrl_neutral2
@@ -1976,8 +1975,6 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
 
     bool hasTuyaCluster = false;
     QString manufacturer;
-    
-    DBG_Printf(DBG_INFO, "COV debug 2\n");
 
     //Make 2 fakes device for tuya switches
     if (node->nodeDescriptor().manufacturerCode() == VENDOR_EMBER && !node->simpleDescriptors().isEmpty())
@@ -2042,7 +2039,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             }
         }
     }
-    DBG_Printf(DBG_INFO, "COV debug 3\n");
+
     QList<deCONZ::SimpleDescriptor>::const_iterator i = node->simpleDescriptors().constBegin();
     QList<deCONZ::SimpleDescriptor>::const_iterator end = node->simpleDescriptors().constEnd();
 
@@ -2080,8 +2077,6 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
 
             }
         }
-
-        DBG_Printf(DBG_INFO, "COV debug 5\n");
         
         // check if node already exist
         LightNode *lightNode2 = nullptr;
@@ -2187,7 +2182,9 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
 
         // For Tuya, we realy need manufacture Name, but can't use it to compare because of fonction setManufacturerCode() that put "Heiman",
         if (node->nodeDescriptor().isNull() || node->simpleDescriptors().empty())
-        { }
+        {
+            DBG_Printf(DBG_INFO, "COV debug 8\n");
+        }
         else if (node->nodeDescriptor().manufacturerCode() == VENDOR_NONE || (node->nodeDescriptor().manufacturerCode() == VENDOR_EMBER))
         {
             if (manufacturer.isEmpty())
@@ -2216,6 +2213,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             }
             if (!manufacturer.isEmpty())
             {
+                DBG_Printf(DBG_INFO, "COV debug 1 : Use name %s\n", qPrintable(manufacturer));
                 lightNode.setManufacturerName(manufacturer);
                 lightNode.setNeedSaveDatabase(true);
             }
@@ -2251,6 +2249,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
         }
         if (node->nodeDescriptor().manufacturerCode() == VENDOR_EMBER)
         {
+            DBG_Printf(DBG_INFO, "COV debug 2\n");
             //Tuya black list
             //_TZE200_aoclfnxz is a thermostat
             //_TZE200_c88teujp same
@@ -2262,6 +2261,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
             if ((lightNode.manufacturer() == QLatin1String("_TZE200_wmcdj3aq")) ||
                 (lightNode.manufacturer() == QLatin1String("_TZE200_zah67ekd"))) // MoesHouse / Livolo Roller Blinds
             {
+                DBG_Printf(DBG_INFO, "COV debug 3\n");
                 hasServerOnOff = true;
             }
             //wireless switch
@@ -2346,6 +2346,7 @@ void DeRestPluginPrivate::addLightNode(const deCONZ::Node *node)
                             }
                             else
                             {
+                                DBG_Printf(DBG_INFO, "COV debug 4\n");
                                 lightNode.setHaEndpoint(*i);
                             }
                         }
