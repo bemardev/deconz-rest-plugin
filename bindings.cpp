@@ -2907,6 +2907,8 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
         sensor->modelId() == QLatin1String("0x8035") ||
         // LIDL
         sensor->modelId() == QLatin1String("HG06323") ||
+        // Xfinity
+        sensor->modelId() == QLatin1String("URC4450BC0-X-R") ||
         // Eria
         sensor->modelId() == QLatin1String("Adurolight_NCC")
         )

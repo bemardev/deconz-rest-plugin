@@ -323,6 +323,7 @@ using namespace deCONZ::literals;
 #define VENDOR_4_NOKS               0x1071
 #define VENDOR_BITRON               0x1071 // branded
 #define VENDOR_COMPUTIME            0x1078
+#define VENDOR_XFINITY              0x10EF // Xfinity
 #define VENDOR_AXIS                 0x1262 // Axis
 #define VENDOR_KWIKSET              0x1092
 #define VENDOR_MMB                  0x109a

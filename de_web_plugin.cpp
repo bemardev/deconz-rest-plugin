@@ -466,6 +466,7 @@ static const SupportedDevice supportedDevices[] = {
     { VENDOR_KWIKSET, "SMARTCODE_CONVERT_GEN1", zenMacPrefix }, // Kwikset 914 ZigBee smart lock
     { VENDOR_EMBER, "TS1001", silabs5MacPrefix }, // LIDL Livarno Lux Remote Control HG06323
     { VENDOR_EMBER, "TS1001", silabs7MacPrefix }, // LIDL Livarno Lux Remote Control HG06323
+    { VENDOR_XFINITY, "URC4450BC0-X-R", emberMacPrefix }, // Xfinity Keypad XHK1-UE / URC4450BC0-X-R
 
     { 0, nullptr, 0 }
 };
