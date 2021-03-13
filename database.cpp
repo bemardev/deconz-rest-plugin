@@ -3157,6 +3157,7 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
             {
                 clusterId = clusterId ? clusterId : IAS_ACE_CLUSTER_ID;
             }
+            
             item = sensor.addItem(DataTypeInt32, RStateButtonEvent);
             item->setValue(0);
 
@@ -3175,6 +3176,10 @@ static int sqliteLoadAllSensorsCallback(void *user, int ncols, char **colval , c
                 sensor.addItem(DataTypeUInt16, RStateX);
                 sensor.addItem(DataTypeUInt16, RStateY);
                 sensor.addItem(DataTypeUInt16, RStateAngle);
+            }
+            else if (sensor.modelId() == QLatin1String("URC4450BC0-X-R"))
+            {
+                sensor.addItem(DataTypeBool, RConfigArmed);
             }
         }
         else if (sensor.type().endsWith(QLatin1String("LightLevel")))

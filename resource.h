@@ -122,6 +122,7 @@ extern const char *RStateWindowOpen;
 extern const char *RStateX;
 extern const char *RStateY;
 
+extern const char *RConfigArmed;
 extern const char *RConfigAlert;
 extern const char *RConfigBattery;
 extern const char *RConfigColorCapabilities;

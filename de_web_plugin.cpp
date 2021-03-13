@@ -958,6 +958,10 @@ void DeRestPluginPrivate::apsdeDataIndication(const deCONZ::ApsDataIndication &i
         case IAS_ZONE_CLUSTER_ID:
             handleIasZoneClusterIndication(ind, zclFrame);
             break;
+            
+        case IAS_ACE_CLUSTER_ID:
+            handleIasAceClusterIndication(ind, zclFrame);
+            break;
 
         case VENDOR_CLUSTER_ID:
         // case DE_CLUSTER_ID:
@@ -4083,6 +4087,7 @@ void DeRestPluginPrivate::checkSensorButtonEvent(Sensor *sensor, const deCONZ::A
     else if (sensor->modelId().startsWith(QLatin1String("TS0215")) || // Tuya remote
              sensor->modelId().startsWith(QLatin1String("RC 110")) || // innr remote
              sensor->modelId().startsWith(QLatin1String("RC_V14")) || // Heiman remote
+             sensor->modelId().startsWith(QLatin1String("URC4450BC0-X-R")) || // Xfinity Keypad XHK1-UE
              sensor->modelId().startsWith(QLatin1String("RC-EM")))   // Heiman remote
     {
         checkClientCluster = true;
@@ -5749,8 +5754,12 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
 
                 case IAS_ACE_CLUSTER_ID:
                 {
-                    if (modelId == QLatin1String("Keyfob-ZB3.0") || modelId == QLatin1String("TS0215") || modelId == QLatin1String("RC_V14") ||
-                        modelId == QLatin1String("RC-EM") || modelId == QLatin1String("RC-EF-3.0"))
+                    if (modelId == QLatin1String("Keyfob-ZB3.0") ||
+                        modelId == QLatin1String("TS0215") ||
+                        modelId == QLatin1String("RC_V14") ||
+                        modelId == QLatin1String("RC-EM") ||
+                        modelId == QLatin1String("URC4450BC0-X-R") ||
+                        modelId == QLatin1String("RC-EF-3.0"))
                     {
                         fpSwitch.outClusters.push_back(ci->id());
                     }
@@ -6330,6 +6339,10 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
             sensorNode.addItem(DataTypeUInt16, RStateX);
             sensorNode.addItem(DataTypeUInt16, RStateY);
             sensorNode.addItem(DataTypeUInt16, RStateAngle);
+        }
+        else if (modelId == QLatin1String("URC4450BC0-X-R"))
+        {
+            sensorNode.addItem(DataTypeBool, RConfigArmed);
         }
     }
     else if (sensorNode.type().endsWith(QLatin1String("LightLevel")))
