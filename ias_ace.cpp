@@ -34,7 +34,7 @@ void DeRestPluginPrivate::handleIasAceClusterIndication(const deCONZ::ApsDataInd
         return;
     }
     
-    DBG_Printf(DBG_INFO, "Debug Keyboard : Address 0x%016llX Payload %s, command 0x%02X\n", ind.srcAddress().ext(), qPrintable(zclFrame.payload().toHex()), zclFrame.commandId());
+    DBG_Printf(DBG_INFO, "Debug Keypad : Address 0x%016llX Payload %s, command 0x%02X\n", ind.srcAddress().ext(), qPrintable(zclFrame.payload().toHex()), zclFrame.commandId());
     return;
 
     QDataStream stream(zclFrame.payload());

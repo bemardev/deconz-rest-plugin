@@ -5762,6 +5762,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
                         modelId == QLatin1String("RC-EF-3.0"))
                     {
                         fpSwitch.outClusters.push_back(ci->id());
+                        DBG_Printf(DBG_INFO, "Debug Keypad : 1\n");
                     }
                 }
                     break;
@@ -5809,7 +5810,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const deCONZ::
             fpSwitch.endpoint = i->endpoint();
             fpSwitch.deviceId = i->deviceId();
             fpSwitch.profileId = i->profileId();
-
+            DBG_Printf(DBG_INFO, "Debug Keypad : 2\n");
             if (modelId.startsWith(QLatin1String("RWL02")))
             {
                 sensor = getSensorNodeForAddress(node->address().ext()); // former created with with endpoint 1
@@ -6226,7 +6227,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
     sensorNode.fingerPrint() = fingerPrint;
     sensorNode.setModelId(modelId);
     quint16 clusterId = 0;
-    
+    DBG_Printf(DBG_INFO, "Debug Keypad : 3\n");
     if (!manufacturer.isEmpty())
     {
         sensorNode.setManufacturer(manufacturer);
@@ -6321,8 +6322,9 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
         {
             clusterId = IAS_ACE_CLUSTER_ID;
         }
-        sensorNode.addItem(DataTypeInt32, RStateButtonEvent);
 
+        sensorNode.addItem(DataTypeInt32, RStateButtonEvent);
+DBG_Printf(DBG_INFO, "Debug Keypad : 4\n");
         if (modelId.startsWith(QLatin1String("lumi.sensor_cube")))
         {
             sensorNode.addItem(DataTypeInt32, RStateGesture);
@@ -7148,7 +7150,7 @@ void DeRestPluginPrivate::addSensorNode(const deCONZ::Node *node, const SensorFi
 
     QString uid = generateUniqueId(sensorNode.address().ext(), sensorNode.fingerPrint().endpoint, clusterId);
     sensorNode.setUniqueId(uid);
-
+DBG_Printf(DBG_INFO, "Debug Keypad : 5\n");
     if (!sensor2 && sensorNode.id().isEmpty())
     {
         openDb();
