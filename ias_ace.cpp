@@ -35,7 +35,6 @@ void DeRestPluginPrivate::handleIasAceClusterIndication(const deCONZ::ApsDataInd
     }
     
     DBG_Printf(DBG_INFO, "Debug Keypad : Address 0x%016llX Payload %s, command 0x%02X\n", ind.srcAddress().ext(), qPrintable(zclFrame.payload().toHex()), zclFrame.commandId());
-    return;
 
     QDataStream stream(zclFrame.payload());
     stream.setByteOrder(QDataStream::LittleEndian);
@@ -91,6 +90,8 @@ void DeRestPluginPrivate::handleIasAceClusterIndication(const deCONZ::ApsDataInd
     }
     else if (zclFrame.commandId() == CMD_GET_PANEL_STATUS)
     {
+        DBG_Printf(DBG_INFO, "Debug Keypad : Sending answer\n");
+        sendGetPanelStatusResponse(ind, zclFrame);
     }
     else if (zclFrame.commandId() == CMD_GET_BYPASSED_ZONE_LIST)
     {
@@ -158,5 +159,78 @@ void DeRestPluginPrivate::sendArmResponse(const deCONZ::ApsDataIndication &ind, 
     if (apsCtrl && apsCtrl->apsdeDataRequest(req) != deCONZ::Success)
     {
         DBG_Printf(DBG_INFO_L2, "[IAS ACE] - Failed to send IAS ACE arm reponse.\n");
+    }
+}
+
+void DeRestPluginPrivate::sendGetPanelStatusResponse(const deCONZ::ApsDataIndication &ind, deCONZ::ZclFrame &zclFrame)
+{
+
+    deCONZ::ApsDataRequest req;
+    deCONZ::ZclFrame outZclFrame;
+
+    req.setProfileId(ind.profileId());
+    req.setClusterId(ind.clusterId());
+    req.setDstAddressMode(ind.srcAddressMode());
+    req.dstAddress() = ind.srcAddress();
+    req.setDstEndpoint(ind.srcEndpoint());
+    req.setSrcEndpoint(endpoint());
+
+    outZclFrame.setSequenceNumber(zclFrame.sequenceNumber());
+    outZclFrame.setCommandId(CMD_GET_PANEL_STATUS_RESPONSE);
+
+    outZclFrame.setFrameControl(deCONZ::ZclFCClusterCommand |
+                             deCONZ::ZclFCDirectionServerToClient |
+                             deCONZ::ZclFCDisableDefaultResponse);
+
+    { // payload
+        QDataStream stream(&outZclFrame.payload(), QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+
+        //   Panel status
+        // --------------        
+        // 0x00 Panel disarmed (all zones disarmed) and ready to arm
+        // 0x01 Armed stay
+        // 0x02 Armed night
+        // 0x03 Armed away
+        // 0x04 Exit delay
+        // 0x05 Entry delay
+        // 0x06 Not ready to arm
+        // 0x07 In alarm
+        // 0x08 Arming Stay
+        // 0x09 Arming Night
+        // 0x0a Arming Away
+        
+        // Alarm Status
+        // ------------
+        // 0x00 No alarm
+        // 0x01 Burglar
+        // 0x02 Fire
+        // 0x03 Emergency
+        // 0x04 Police Panic
+        // 0x05 Fire Panic
+        // 0x06 Emergency Panic (i.e., medical issue)
+        
+        // Audible Notification
+        // ----------------------   
+        // 0x00 Mute (i.e., no audible notification)
+        // 0x01 Default sound
+        // 0x80-0xff Manufacturer specific
+
+        stream << (quint8) 0x00; // Panel status
+        stream << (quint8) 0x00; // Seconds Remaining
+        stream << (quint8) 0x00; // Audible Notification
+        stream << (quint8) 0x00; // Alarm status
+
+    }
+
+    { // ZCL frame
+        QDataStream stream(&req.asdu(), QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        outZclFrame.writeToStream(stream);
+    }
+
+    if (apsCtrl && apsCtrl->apsdeDataRequest(req) != deCONZ::Success)
+    {
+        DBG_Printf(DBG_INFO_L2, "[IAS ACE] - Failed to send IAS ACE get panel reponse.\n");
     }
 }
